@@ -18,6 +18,8 @@ class Plot():
 
           sharpe[i] = mu / sigma
 
+        return sharpe
+
     def plot_results(self, data, rewards, decisions):
         sharpe=self.sharpe(rewards)
         padding = zeros(len(data)-len(rewards))

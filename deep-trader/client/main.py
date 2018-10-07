@@ -26,4 +26,4 @@ if __name__ == '__main__':
   i_train, o_train, i_test, o_test = feeder.process()
 
   model = Model()
-  model.train(i_train, o_train, i_test)
+  model.train(i_train, o_train, i_test, o_test)

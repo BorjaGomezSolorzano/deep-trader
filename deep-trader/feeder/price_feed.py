@@ -24,7 +24,7 @@ class Feeder:
         df = pd.read_csv(filename, names=['time', 'base', 'quote', 'instrument'], skiprows=1)
         df['prices_diff']=df['instrument'].diff(periods=1)
         df = df.drop('time', axis=1)
-        df = df.tail(50)
+        df = df.tail(200)
 
         return df
 

@@ -7,6 +7,7 @@ Created on 11/09/2018
 
 import tensorflow as tf
 from rlFunctions import Functions
+from graphics.plot_results import Plot
 import constants
 import os
 import yaml
@@ -26,7 +27,7 @@ class Model():
         self.epochs = config['epochs']
 
 
-    def train(self, i_train, o_train, i_test):
+    def train(self, i_train, o_train, i_test, o_test):
 
         series_test_length = i_test.shape[0]
         series_train_length = i_train.shape[0]
@@ -55,9 +56,11 @@ class Model():
 
             action = self.get_action(i_test_ph, c_a, Ws_real, bs_real)
 
-            a = [0]#np.array([1,1], dtype=constants.float_type_np)
-            rew = 0
-            next_action = 0
+            functions = Functions()
+
+            a = np.zeros((1, 1), dtype=constants.float_type_np)
+            accum_rew = 0
+            past_a = a
             actions = []
             rewards = []
             for i in range(self.n_layers[0], series_test_length):
@@ -67,17 +70,20 @@ class Model():
 
                 a_pred = sess.run(action, feed_dict=feed_dict)
 
-                a = a_pred.transpose()[0][0]
-                actions.append(a)
+                action_appended = a_pred.transpose()[0][0]
+                actions.append(action_appended)
 
-                # d=denorm(z_test[0,n_layer+i-1]) * out_temp - c*abs(out_temp - old_out)
-                d = 1  # output_test[n_layers[0] + i - 1] * out_temp - c * abs(out_temp - old_out)
-                # print(d,", ",out_temp, ",", old_out)
-                rew += d
-                old_action = a
+                a = np.zeros((1, 1), dtype=constants.float_type_np)
+                a[0][0] = action_appended
 
-                rewards.append(rew)
-                # print(i," Action: ", a, "reward:", rew)
+                rew = functions.reward_array(o_test[i][0], self.c, past_a, a)
+                accum_rew += rew[0][0]
+                past_a = a
+
+                rewards.append(accum_rew)
+
+            plot = Plot()
+            plot.plot_results(o_test, rewards, actions)
 
 
     def get_action(self, input, past_action, Ws, bs):
