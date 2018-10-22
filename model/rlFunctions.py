@@ -18,10 +18,10 @@ class Functions:
     # REWARD
     @classmethod
     def reward(self, u, c, z_t, z_tm1):
-        return u * z_t - c * tf.abs(z_t - z_tm1)
+        return u * z_tm1 - c * tf.abs(z_t - z_tm1)
 
     def reward_array(self, u, c, z_t, z_tm1):
-        return u * z_t - c * np.abs(z_t - z_tm1)
+        return u * z_tm1 - c * np.abs(z_t - z_tm1)
 
     # UTILITY function: Sharpe ratio
     @classmethod

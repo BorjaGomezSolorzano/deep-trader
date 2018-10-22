@@ -10,7 +10,7 @@ import os
 
 def get_logger(name):
     dirname = os.path.dirname(__file__)
-    filename = os.path.join(dirname, '../logs/order-flow-strategy.log')
+    filename = os.path.join(dirname, '../logs/deep-trader.log')
 
     logger = logging.getLogger(name)
     logger.setLevel(logging.INFO)
