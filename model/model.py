@@ -40,10 +40,9 @@ class Model():
         with tf.Session() as sess:
             init.run()
             for ep in range(self.epochs):
-                #FIXME Esto da error: 'Model' object has no attribute 'action_ph'
                 feed_dict = {self.action_ph: np.zeros((1, 1))}
                 for i in range(self.n_layers[0], series_train_length):
-                    feed_dict[self.input_ph[i - self.n_layers[0]]] = i_train[(i - self.n_layers[0]):i, ]
+                    feed_dict[self.input_ph[i - self.n_layers[0]]] = i_train[(i - self.n_layers[0]):i, ].reshape((self.n_layers[0]*self.n_features,1))
                     aux = np.zeros((1, 1), dtype=constants.float_type_np)
                     aux[0][0] = o_train[i]
                     feed_dict[self.output_ph[i - self.n_layers[0]]] = aux
@@ -53,7 +52,7 @@ class Model():
 
             Ws_real, bs_real = sess.run([Ws, bs])
 
-            i_test_ph = tf.placeholder(tf.float32, shape=[self.n_layers[0], self.n_features])
+            i_test_ph = tf.placeholder(tf.float32, shape=[self.n_layers[0] * self.n_features, 1])
             f_a_ph = tf.placeholder(tf.float32, [1, 1])
             c_a = f_a_ph
 
@@ -68,7 +67,7 @@ class Model():
             rewards = []
             for i in range(self.n_layers[0], series_test_length):
                 feed_dict = {}
-                feed_dict[i_test_ph] = i_test[(i - self.n_layers[0]):i]
+                feed_dict[i_test_ph] = i_test[(i - self.n_layers[0]):i].reshape((self.n_layers[0] * self.n_features, 1))
                 feed_dict[f_a_ph] = a
 
                 a_pred = sess.run(action, feed_dict=feed_dict)
@@ -102,25 +101,24 @@ class Model():
         hidden_layer = constants.f(tf.add(tf.matmul(input_layer, Ws[1]), bs[1]))
         output_layer = constants.f(tf.add(tf.matmul(hidden_layer, Ws[2]), bs[2]))
 
-        return tf.reshape(tf.transpose(output_layer)[0][0],[1,1])
-        #return output_layer
+        return tf.reshape(tf.transpose(output_layer)[0][0], [1,1])
 
     def init_placeholders(self, len):
         self.input_ph = []
         self.output_ph = []
         for i in range(len):
-            self.input_ph.append(tf.placeholder(constants.float_type_tf, shape=[self.n_layers[0], self.n_features]))
+            self.input_ph.append(tf.placeholder(constants.float_type_tf, shape=[self.n_layers[0] * self.n_features, 1]))
             self.output_ph.append(tf.placeholder(constants.float_type_tf, shape=[1, 1]))
 
     def init_weights_and_biases(self):
-        #FIXME Los primeros pesos tienen el anadido del peso de la accion del pasado
-        Ws = [tf.Variable(tf.random_uniform([self.n_features, self.n_layers[0] + 1]), dtype=constants.float_type_tf), #Input
-                   tf.Variable(tf.random_uniform([self.n_layers[0] + 1, self.n_layers[1]]), dtype=constants.float_type_tf), #Hidden
-                   tf.Variable(tf.random_uniform([self.n_layers[1], 1]), dtype=constants.float_type_tf)] #Output
 
-        bs = [tf.Variable(tf.zeros([self.n_layers[0] + 1]), dtype=constants.float_type_tf), #Input
-                   tf.Variable(tf.zeros([self.n_layers[1]]), dtype=constants.float_type_tf), #Hidden
-                   tf.Variable(tf.zeros([1]), dtype=constants.float_type_tf)] #Output
+        Ws = [tf.Variable(tf.random_uniform([1, self.n_layers[0] * self.n_features + 1]), dtype=constants.float_type_tf),
+              tf.Variable(tf.random_uniform([self.n_layers[0] * self.n_features + 1, self.n_layers[1]]), dtype=constants.float_type_tf),
+              tf.Variable(tf.random_uniform([self.n_layers[1], 1]), dtype=constants.float_type_tf)]
+
+        bs = [tf.Variable(tf.zeros([self.n_layers[0] * self.n_features + 1]), dtype=constants.float_type_tf),
+              tf.Variable(tf.zeros([self.n_layers[1]]), dtype=constants.float_type_tf),
+              tf.Variable(tf.zeros([1]), dtype=constants.float_type_tf)]
 
         return Ws, bs
 
