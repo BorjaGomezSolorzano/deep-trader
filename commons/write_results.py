@@ -19,14 +19,14 @@ def sharpe_c(rewards):
 
     return sharpe
 
-def read(instrument):
+def read(config):
     dates = []
     data = []
     rewards = []
     sharpe = []
     decisions = []
 
-    filename = os.path.join(path, "../results/" + instrument + '.csv')
+    filename = os.path.join(path, "../results/" + config['instrument'] + '_' + str(config['c']) + '.csv')
 
     with open(filename, "r") as file:
         for line in file:
@@ -39,7 +39,7 @@ def read(instrument):
 
     return dates, data, rewards, sharpe, decisions
 
-def write(instrument, dates_test, data, rewards, decisions):
+def write(config, dates_test, data, rewards, decisions):
 
     sharpe = sharpe_c(rewards)
     padding = np.zeros(len(data) - len(rewards))
@@ -47,7 +47,7 @@ def write(instrument, dates_test, data, rewards, decisions):
     sharpe = np.append(padding, sharpe)
     decisions = np.append(padding, decisions)
 
-    filename = os.path.join(path, "../results/" + instrument + '.csv')
+    filename = os.path.join(path, "../results/" + config['instrument'] + '_' + str(config['c']) + '.csv')
     with open(filename, "w") as file:
         for i in range(len(data)):
             file.write(str(int(dates_test[i])) + "," +
