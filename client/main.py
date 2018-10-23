@@ -23,9 +23,9 @@ filename = os.path.join(dirname, "../config/config.yaml")
 def read_csv():
   config = yaml.load(open(filename, 'r'))
 
-  dates, data, rewards, sharpe, decisions = read(config['instrument'])
+  dates, data, rewards, sharpe, decisions = read(config)
 
-  plotly_interactive_decisions(dates, data, rewards, decisions, sharpe, instrument=config['instrument'])
+  plotly_interactive_decisions(dates, data, rewards, decisions, sharpe, config=config)
 
 
 def write_csv():
@@ -39,7 +39,7 @@ def write_csv():
   rewards, actions = model.train(i_train, o_train, i_test, o_test)
 
   dates_train, instrument_train, dates_test, instrument_test = feeder.instrument_values()
-  write(config['instrument'], dates_test, instrument_test, rewards, actions)
+  write(config, dates_test, instrument_test, rewards, actions)
 
 
 if __name__ == '__main__':
