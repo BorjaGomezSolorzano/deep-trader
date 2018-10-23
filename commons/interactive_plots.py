@@ -13,12 +13,12 @@ import datetime
 
 path = os.path.abspath(os.path.dirname(__file__))
 
-def plotly_interactive_decisions(dates, data, rewards, decisions, sharpe, instrument='EURUSD'):
+def plotly_interactive_decisions(dates, data, rewards, decisions, sharpe, config):
 
     data_trace = go.Scatter(
         x=[datetime.datetime.utcfromtimestamp(int(x) / 1000) for x in dates],
         y=[round(float(x), 4) for x in data],
-        name="price ({})".format(instrument)
+        name="price ({})".format(config['instrument'])
     )
 
     rewards_trace = go.Scatter(
@@ -46,6 +46,6 @@ def plotly_interactive_decisions(dates, data, rewards, decisions, sharpe, instru
     fig.append_trace(decisions_trace, 3, 1)
     fig.append_trace(sharpe_trace, 4, 1)
 
-    fig['layout'].update(height=800, width=1000, title='deep-trader {}'.format(instrument))
+    fig['layout'].update(height=800, width=1000, title='deep-trader {}'.format(config['instrument']))
 
-    py.plot(fig, filename='{}.html'.format("../results/" + instrument))
+    py.plot(fig, filename='{}.html'.format("../results/" + config['instrument'] + '_' + str(config['c'])))
