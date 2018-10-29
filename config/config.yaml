@@ -1,11 +1,11 @@
-instrument: 'GBPAUD'
-#GBPAUD
-#[0,1,2]
-features_idx: [3]
-instrument_idx: 3
+#Time,Open,Max,Min,Close,Volume
+instrument: 'XAUUSD'
+features_idx: [1,2,3]
+instrument_idx: 1
 trainPctg: 0.8
 # Model variables
 c: 0.001
-learning_rate: 0.01
-epochs: 20
+learning_rate: 0.001
+epochs: 200
 n_layers: [10, 5]
+last_n_values: 500

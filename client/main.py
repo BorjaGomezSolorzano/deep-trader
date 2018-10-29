@@ -25,7 +25,7 @@ def read_csv():
 
   dates, data, rewards, sharpe, decisions = read(config)
 
-  plotly_interactive_decisions(dates, data, rewards, decisions, sharpe, config=config)
+  plotly_interactive_decisions(True, dates, data, rewards, decisions, sharpe, config=config)
 
 
 def write_csv():

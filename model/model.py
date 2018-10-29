@@ -26,6 +26,7 @@ class Model():
         self.learning_rate = config['learning_rate']
         self.c = config['c']
         self.epochs = config['epochs']
+        self.functions = Functions()
 
 
     def train(self, i_train, o_train, i_test, o_test):
@@ -41,16 +42,20 @@ class Model():
             init.run()
             for ep in range(self.epochs):
                 feed_dict = {self.action_ph: np.zeros((1, 1))}
+                #FIXME Do it in batches
                 for i in range(self.n_layers[0], series_train_length):
                     feed_dict[self.input_ph[i - self.n_layers[0]]] = i_train[(i - self.n_layers[0]):i, ].reshape((self.n_layers[0]*self.n_features,1))
-                    aux = np.zeros((1, 1), dtype=constants.float_type_np)
-                    aux[0][0] = o_train[i]
-                    feed_dict[self.output_ph[i - self.n_layers[0]]] = aux
+                    feed_dict[self.output_ph[i - self.n_layers[0]]] = o_train[i]
 
                 reward,  _ = sess.run([self.u, self.optimizer], feed_dict=feed_dict)
-                print('epoch ' + str(ep) + ", reward " + str(reward))
+                print('epoch ' + str(ep) + ", reward " + str(reward[0][0]))
 
             Ws_real, bs_real = sess.run([Ws, bs])
+
+            print('Weights')
+            print(Ws_real)
+            print('Biases')
+            print(bs_real)
 
             i_test_ph = tf.placeholder(tf.float32, shape=[self.n_layers[0] * self.n_features, 1])
             f_a_ph = tf.placeholder(tf.float32, [1, 1])
@@ -58,29 +63,23 @@ class Model():
 
             action = self.get_action(i_test_ph, c_a, Ws_real, bs_real)
 
-            functions = Functions()
-
             a = np.zeros((1, 1), dtype=constants.float_type_np)
             accum_rew = 0
             past_a = a
             actions = []
             rewards = []
             for i in range(self.n_layers[0], series_test_length):
-                feed_dict = {}
-                feed_dict[i_test_ph] = i_test[(i - self.n_layers[0]):i].reshape((self.n_layers[0] * self.n_features, 1))
-                feed_dict[f_a_ph] = a
-
-                a_pred = sess.run(action, feed_dict=feed_dict)
-
+                a_pred = sess.run(action, feed_dict={i_test_ph:i_test[(i - self.n_layers[0]):i].reshape((self.n_layers[0] * self.n_features, 1)),
+                                                     f_a_ph:a})
                 actions.append(a_pred)
-
-                a = np.zeros((1, 1), dtype=constants.float_type_np)
                 a[0][0] = a_pred
 
-                rew = functions.reward_array(o_test[i], self.c, past_a, a)
-                accum_rew += rew[0][0]
+                print('action predicted: ' + str(a_pred[0][0]))
+
+                rew = self.functions.reward_array(o_test[i], self.c, a, past_a)
                 past_a = a
 
+                accum_rew += rew[0][0]
                 rewards.append(accum_rew)
 
         return rewards, actions
@@ -108,7 +107,7 @@ class Model():
         self.output_ph = []
         for i in range(len):
             self.input_ph.append(tf.placeholder(constants.float_type_tf, shape=[self.n_layers[0] * self.n_features, 1]))
-            self.output_ph.append(tf.placeholder(constants.float_type_tf, shape=[1, 1]))
+            self.output_ph.append(tf.placeholder(constants.float_type_tf, shape=()))
 
     def init_weights_and_biases(self):
 
@@ -127,17 +126,15 @@ class Model():
         self.init_placeholders(l)
         Ws, bs = self.init_weights_and_biases()
 
-        functions = Functions()
-
         rewards = []
         self.action_ph = tf.placeholder(constants.float_type_tf, shape=[1, 1])
         past_action = self.action_ph
         for i in range(l):
             action = self.get_action(self.input_ph[i], past_action, Ws, bs)
-            rewards.append(functions.reward(self.output_ph[i], self.c, action, past_action))
+            rewards.append(self.functions.reward(self.output_ph[i], self.c, action, past_action))
             past_action = action
 
-        self.u = functions.utility(rewards)
+        self.u = self.functions.utility(rewards)
         self.optimizer = tf.train.RMSPropOptimizer(learning_rate=self.learning_rate).minimize(-self.u)
 
         return Ws, bs

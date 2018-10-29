@@ -13,28 +13,28 @@ import datetime
 
 path = os.path.abspath(os.path.dirname(__file__))
 
-def plotly_interactive_decisions(dates, data, rewards, decisions, sharpe, config):
+def plotly_interactive_decisions(date_string, dates, data, rewards, decisions, sharpe, config):
 
     data_trace = go.Scatter(
-        x=[datetime.datetime.utcfromtimestamp(int(x) / 1000) for x in dates],
+        x=[x for x in dates] if date_string else [datetime.datetime.utcfromtimestamp(int(x) / 1000) for x in dates],
         y=[round(float(x), 4) for x in data],
         name="price ({})".format(config['instrument'])
     )
 
     rewards_trace = go.Scatter(
-        x=[datetime.datetime.utcfromtimestamp(int(x) / 1000) for x in dates],
+        x=[x for x in dates] if date_string else [datetime.datetime.utcfromtimestamp(int(x) / 1000) for x in dates],
         y=[round(float(x), 4) for x in rewards],
         name="rewards",
     )
 
     decisions_trace = go.Scatter(
-        x=[datetime.datetime.utcfromtimestamp(int(x) / 1000) for x in dates],
+        x=[x for x in dates] if date_string else [datetime.datetime.utcfromtimestamp(int(x) / 1000) for x in dates],
         y=[round(float(x), 4) for x in decisions],
         name="decisions",
     )
 
     sharpe_trace = go.Scatter(
-        x=[datetime.datetime.utcfromtimestamp(int(x) / 1000) for x in dates],
+        x=[x for x in dates] if date_string else [datetime.datetime.utcfromtimestamp(int(x) / 1000) for x in dates],
         y=[round(float(x), 4) for x in sharpe],
         name="sharpe",
     )

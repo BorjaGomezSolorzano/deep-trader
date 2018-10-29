@@ -50,8 +50,9 @@ def write(config, dates_test, data, rewards, decisions):
     filename = os.path.join(path, "../results/" + config['instrument'] + '_' + str(config['c']) + '.csv')
     with open(filename, "w") as file:
         for i in range(len(data)):
-            file.write(str(int(dates_test[i])) + "," +
+            file.write(dates_test[i] + "," +
                        str(float(data[i])) + "," +
                        str(float(rewards[i])) + "," +
                        str(float(sharpe[i])) + "," +
                        str(float(decisions[i])) + "\n")
+

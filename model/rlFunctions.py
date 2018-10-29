@@ -3,25 +3,13 @@ import numpy as np
 
 class Functions:
 
-    # ACTION
-    @classmethod
-    def action(self, X, W_x, B_x):
-        """
-
-        :param X:
-        :param W_x:
-        :param B_x:
-        :return:
-        """
-        return tf.tanh(tf.matmul(X, W_x) + B_x)
-
     # REWARD
     @classmethod
-    def reward(self, u, c, z_t, z_tm1):
-        return u * z_tm1 - c * tf.abs(z_t - z_tm1)
+    def reward(self, u, c, action_t, action_t1):
+        return u * action_t - c * tf.abs(action_t - action_t1)
 
-    def reward_array(self, u, c, z_t, z_tm1):
-        return u * z_tm1 - c * np.abs(z_t - z_tm1)
+    def reward_array(self, u, c, action_t, action_t1):
+        return u * action_t - c * np.abs(action_t - action_t1)
 
     # UTILITY function: Sharpe ratio
     @classmethod
@@ -31,6 +19,7 @@ class Functions:
         :param returns:
         :return:
         """
+
         mu = 0
         sigma = 0
         size = len(returns)
@@ -41,6 +30,8 @@ class Functions:
         for i in range(0, size):
             sigma = sigma + (mu - returns[i]) * (mu - returns[i])
         sigma = (sigma / size) ** (1 / 2)
+        #sp = np.mean(returns) / np.std(returns)
+        #mu, sigma = tf.nn.moments(returns, axes=[1])
 
         return mu / sigma
 

@@ -17,8 +17,6 @@ dirname = os.path.dirname(__file__)
 
 class Feeder:
 
-    last_n_values = 500
-
     def __init__(self, config):
         self.config = config
         self.filename = os.path.join(dirname, '../data/' + config['instrument'] + '.csv')
@@ -37,7 +35,7 @@ class Feeder:
 
     def instrument_values(self):
         df = pd.read_csv(self.filename, skiprows=1)
-        df = df.tail(self.last_n_values)
+        df = df.tail(self.config['last_n_values'])
 
         dataset = df.values
 
@@ -54,7 +52,7 @@ class Feeder:
     def process(self):
         df = pd.read_csv(self.filename, skiprows=1)
         df['prices_diff'] = df.iloc[:,self.config['instrument_idx']].diff(periods=1)
-        df = df.tail(self.last_n_values)
+        df = df.tail(self.config['last_n_values'])
 
         dataset = df.values
 

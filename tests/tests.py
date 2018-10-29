@@ -1,18 +1,9 @@
 import tensorflow as tf
-x = tf.placeholder(tf.float32, [None, 784])
+import commons.constants
 
-#layer 1
-W1 = tf.Variable(tf.zeros([784, 100]))
-b1 = tf.Variable(tf.zeros([100]))
-y1 = tf.matmul(x, W1) + b1 #remove softmax
+x = tf.placeholder(commons.constants.float_type_tf, shape=[3, 1])
+action = tf.placeholder(tf.float32, shape=(), name="action")
 
-#layer 2
-W2 = tf.Variable(tf.zeros([100, 10]))
-b2 = tf.Variable(tf.zeros([10]))
-y2 = tf.nn.softmax(tf.matmul(y1, W2) + b2)
-
-#output
-y = y2
-y_ = tf.placeholder(tf.float32, [None, 10])
+x1 = tf.concat([x, tf.reshape(action,(1,1))], 0)
 
 r=1
