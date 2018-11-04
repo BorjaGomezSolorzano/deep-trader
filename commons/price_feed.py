@@ -22,17 +22,6 @@ class Feeder:
         self.filename = os.path.join(dirname, '../data/' + config['instrument'] + '.csv')
         self.features_len = len(config['features_idx'])
 
-    # convert an array of values into a dataset matrix
-    def create_dataset(self, dataset):
-        returns_idx = dataset.shape[1]-1
-        dataX, dataY = [], []
-        for i in range(len(dataset) - 1):
-            a = dataset[i, self.config['features_idx']]
-            dataX.append(a)
-            dataY.append(dataset[i, returns_idx])
-
-        return np.array(dataX, dtype=constants.float_type_np), np.array(dataY, dtype=constants.float_type_np)
-
     def instrument_values(self):
         df = pd.read_csv(self.filename, skiprows=1)
         df = df.tail(self.config['last_n_values'])
@@ -49,9 +38,22 @@ class Feeder:
 
         return dates_train, instrument_train, dates_test, instrument_test
 
+    # convert an array of values into a dataset matrix
+    def create_dataset(self, dataset):
+        returns_idx = dataset.shape[1]-1
+        dataX, dataY = [], []
+        for i in range(len(dataset) - 1):
+            dataX.append(dataset[i, self.config['features_idx']])
+            dataY.append(dataset[i, returns_idx])
+
+        return np.array(dataX, dtype=constants.float_type_np), np.array(dataY, dtype=constants.float_type_np)
+
     def process(self):
         df = pd.read_csv(self.filename, skiprows=1)
         df['prices_diff'] = df.iloc[:,self.config['instrument_idx']].diff(periods=1)
+        df['prices_diff'] = df['prices_diff'].shift(-1)
+        df = df[pd.notnull(df['prices_diff'])]
+
         df = df.tail(self.config['last_n_values'])
 
         dataset = df.values

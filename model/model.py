@@ -8,7 +8,6 @@ Created on 11/09/2018
 import os
 
 from commons import constants
-import numpy as np
 import tensorflow as tf
 import yaml
 
@@ -28,27 +27,27 @@ class Model():
         self.epochs = config['epochs']
         self.functions = Functions()
 
-
     def train(self, i_train, o_train, i_test, o_test):
 
         series_test_length = i_test.shape[0]
         series_train_length = i_train.shape[0]
         len = series_train_length - self.n_layers[0]
 
-        Ws, bs = self.optimize_all(len)
+        Ws, bs = self.init_weights_and_biases()
+
+        u, optimizer, input_ph, output_ph, action_ph = self.optimize_all(Ws, bs, len)
 
         init = tf.global_variables_initializer()
         with tf.Session() as sess:
             init.run()
             for ep in range(self.epochs):
-                feed_dict = {self.action_ph: np.zeros((1, 1))}
-                #FIXME Do it in batches
+                feed_dict = {action_ph: 0}
                 for i in range(self.n_layers[0], series_train_length):
-                    feed_dict[self.input_ph[i - self.n_layers[0]]] = i_train[(i - self.n_layers[0]):i, ].reshape((self.n_layers[0]*self.n_features,1))
-                    feed_dict[self.output_ph[i - self.n_layers[0]]] = o_train[i]
+                    feed_dict[input_ph[i - self.n_layers[0]]] = i_train[(i - self.n_layers[0]):i, ].reshape((self.n_layers[0]*self.n_features,1))
+                    feed_dict[output_ph[i - self.n_layers[0]]] = o_train[i]
 
-                reward,  _ = sess.run([self.u, self.optimizer], feed_dict=feed_dict)
-                print('epoch ' + str(ep) + ", reward " + str(reward[0][0]))
+                reward,  _ = sess.run([u, optimizer], feed_dict=feed_dict)
+                print("epoch: " + str(ep) + ", reward: " + str(reward))
 
             Ws_real, bs_real = sess.run([Ws, bs])
 
@@ -57,84 +56,86 @@ class Model():
             print('Biases')
             print(bs_real)
 
-            i_test_ph = tf.placeholder(tf.float32, shape=[self.n_layers[0] * self.n_features, 1])
-            f_a_ph = tf.placeholder(tf.float32, [1, 1])
-            c_a = f_a_ph
+            i_test_ph = tf.placeholder(constants.float_type_tf, shape=[self.n_layers[0] * self.n_features, 1])
+            f_a_ph = tf.placeholder(constants.float_type_tf, shape=())
 
-            action = self.get_action(i_test_ph, c_a, Ws_real, bs_real)
+            action = self.get_action(i_test_ph, f_a_ph, Ws_real, bs_real)
 
-            a = np.zeros((1, 1), dtype=constants.float_type_np)
+            a = 0
             accum_rew = 0
             past_a = a
             actions = []
             rewards = []
             for i in range(self.n_layers[0], series_test_length):
-                a_pred = sess.run(action, feed_dict={i_test_ph:i_test[(i - self.n_layers[0]):i].reshape((self.n_layers[0] * self.n_features, 1)),
+
+                a = sess.run(action, feed_dict={i_test_ph:i_test[(i - self.n_layers[0]):i].reshape((self.n_layers[0] * self.n_features, 1)),
                                                      f_a_ph:a})
-                actions.append(a_pred)
-                a[0][0] = a_pred
+                actions.append(a)
 
-                print('action predicted: ' + str(a_pred[0][0]))
+                print('action predicted: ' + str(a))
 
-                rew = self.functions.reward_array(o_test[i], self.c, a, past_a)
+                rew = self.functions.reward(o_test[i], self.c, a, past_a)
                 past_a = a
 
-                accum_rew += rew[0][0]
+                accum_rew += rew
                 rewards.append(accum_rew)
 
         return rewards, actions
 
+    def init_weights_and_biases(self):
+        l=len(self.n_layers)
+        Ws = []
+        bs = []
+        dim_before = self.n_layers[0] * self.n_features + 1
+        Ws.append(tf.Variable(tf.random_uniform([1, dim_before]), dtype=constants.float_type_tf)) #Input layer
+        bs.append(tf.Variable(tf.zeros([dim_before]), dtype=constants.float_type_tf))
+
+        for i in range(1, l): #Hidden layers
+            dim = self.n_layers[i]
+            Ws.append(tf.Variable(tf.random_uniform([dim_before, dim]),dtype=constants.float_type_tf))
+            bs.append(tf.Variable(tf.zeros([dim]), dtype=constants.float_type_tf))
+            dim_before = dim
+
+        bs.append(tf.Variable(tf.zeros([1]), dtype=constants.float_type_tf))
+        Ws.append(tf.Variable(tf.random_uniform([dim_before, 1]), dtype=constants.float_type_tf)) #Output layer
+
+        return Ws, bs
 
     def get_action(self, input_standard, action, Ws, bs):
-        """
+        l = len(self.n_layers)
 
-        :param input:
-        :param action:
-        :param Ws:
-        :param bs:
-        :return:
-        """
+        input = tf.concat([input_standard, tf.reshape(action, (1, 1))], 0)
+        hidden_layer_i = constants.f(tf.add(tf.matmul(input, Ws[0]), bs[0])) #Input layer
 
-        input = tf.concat([input_standard, action], 0)
-        input_layer = constants.f(tf.add(tf.matmul(input, Ws[0]), bs[0]))
-        hidden_layer = constants.f(tf.add(tf.matmul(input_layer, Ws[1]), bs[1]))
-        output_layer = constants.f(tf.add(tf.matmul(hidden_layer, Ws[2]), bs[2]))
+        for i in range(1, l): #Hidden layers
+            hidden_layer_i = constants.f(tf.add(tf.matmul(hidden_layer_i, Ws[i]), bs[i]))
 
-        return tf.reshape(tf.transpose(output_layer)[0][0], [1,1])
+        output_layer = constants.f(tf.add(tf.matmul(hidden_layer_i, Ws[l]), bs[l])) #Output layer
+
+        return tf.transpose(output_layer)[0][0] #tf.sign(tf.transpose(output_layer)[0][0])
 
     def init_placeholders(self, len):
-        self.input_ph = []
-        self.output_ph = []
+        input_ph = []
+        output_ph = []
         for i in range(len):
-            self.input_ph.append(tf.placeholder(constants.float_type_tf, shape=[self.n_layers[0] * self.n_features, 1]))
-            self.output_ph.append(tf.placeholder(constants.float_type_tf, shape=()))
+            input_ph.append(tf.placeholder(constants.float_type_tf, shape=[self.n_layers[0] * self.n_features, 1]))
+            output_ph.append(tf.placeholder(constants.float_type_tf, shape=()))
 
-    def init_weights_and_biases(self):
+        return input_ph, output_ph
 
-        Ws = [tf.Variable(tf.random_uniform([1, self.n_layers[0] * self.n_features + 1]), dtype=constants.float_type_tf),
-              tf.Variable(tf.random_uniform([self.n_layers[0] * self.n_features + 1, self.n_layers[1]]), dtype=constants.float_type_tf),
-              tf.Variable(tf.random_uniform([self.n_layers[1], 1]), dtype=constants.float_type_tf)]
+    def optimize_all(self, Ws, bs, l):
 
-        bs = [tf.Variable(tf.zeros([self.n_layers[0] * self.n_features + 1]), dtype=constants.float_type_tf),
-              tf.Variable(tf.zeros([self.n_layers[1]]), dtype=constants.float_type_tf),
-              tf.Variable(tf.zeros([1]), dtype=constants.float_type_tf)]
-
-        return Ws, bs
-
-    def optimize_all(self, l):
-
-        self.init_placeholders(l)
-        Ws, bs = self.init_weights_and_biases()
+        input_ph, output_ph = self.init_placeholders(l)
 
         rewards = []
-        self.action_ph = tf.placeholder(constants.float_type_tf, shape=[1, 1])
-        past_action = self.action_ph
+        action_ph = tf.placeholder(constants.float_type_tf, shape=())
+        past_action = action_ph
         for i in range(l):
-            action = self.get_action(self.input_ph[i], past_action, Ws, bs)
-            rewards.append(self.functions.reward(self.output_ph[i], self.c, action, past_action))
+            action = self.get_action(input_ph[i], past_action, Ws, bs)
+            rewards.append(self.functions.reward(output_ph[i], self.c, action, past_action))
             past_action = action
 
-        self.u = self.functions.utility(rewards)
-        self.optimizer = tf.train.RMSPropOptimizer(learning_rate=self.learning_rate).minimize(-self.u)
+        u = self.functions.utility(rewards)
+        optimizer = tf.train.RMSPropOptimizer(learning_rate=self.learning_rate).minimize(-u)
 
-        return Ws, bs
+        return u, optimizer, input_ph, output_ph, action_ph
