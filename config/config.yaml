@@ -1,12 +1,13 @@
 #Time,Open,Max,Min,Close,Volume
-instrument: 'XAUUSD'
-#[1,2,3]
+instrument: 'GBPUSD'
+#features_idx: [1,2,3]
 features_idx: [1]
 instrument_idx: 1
-trainPctg: 0.8
 # Model variables
 c: 0.001
 learning_rate: 0.001
-epochs: 200
-n_layers: [3]
+epochs: 50
+n_layers: [10]
+window_size: 21
+n_actions: 200
 last_n_values: 500

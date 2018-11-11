@@ -33,13 +33,12 @@ def write_csv():
 
   feeder = Feeder(config)
 
-  i_train, o_train, i_test, o_test = feeder.process()
+  X, y, dates, instrument = feeder.process()
 
   model = Model()
-  rewards, actions = model.train(i_train, o_train, i_test, o_test)
+  rewards, actions, dates_o, instrument_o = model.train(X, y, dates, instrument)
 
-  dates_train, instrument_train, dates_test, instrument_test = feeder.instrument_values()
-  write(config, dates_test, instrument_test, rewards, actions)
+  write(config, dates_o, instrument_o, rewards, actions)
 
 
 if __name__ == '__main__':

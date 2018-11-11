@@ -25,79 +25,90 @@ class Model():
         self.learning_rate = config['learning_rate']
         self.c = config['c']
         self.epochs = config['epochs']
+        self.window_size = config['window_size']
+        self.n_actions = config['n_actions']
         self.functions = Functions()
 
-    def train(self, i_train, o_train, i_test, o_test):
+    def train(self, X, y, dates, instrument):
 
-        series_test_length = i_test.shape[0]
-        series_train_length = i_train.shape[0]
-        len = series_train_length - self.n_layers[0]
+        if self.window_size < self.n_layers[0]: #FIXME Sacar esto fuera
+            print('ERROR, NOT ENOUGH DATA')
 
-        Ws, bs = self.init_weights_and_biases()
+        Ws, bs = self.weights_and_biases()
 
-        u, optimizer, input_ph, output_ph, action_ph = self.optimize_all(Ws, bs, len)
+        input_ph, output_ph = self.init_placeholders()
+
+        rewards = []
+        actions = []
+        action_ph = tf.placeholder(constants.float_type_tf, shape=())
+        past_action = action_ph
+        for i in range(self.window_size):
+            action = self.get_action(input_ph[i], past_action, Ws, bs)
+            rewards.append(self.functions.reward(output_ph[i], self.c, action, past_action))
+            actions.append(action)
+            past_action = action
+
+        u = self.functions.utility(rewards)
+        optimizer = tf.train.GradientDescentOptimizer(learning_rate=self.learning_rate).minimize(-u)
 
         init = tf.global_variables_initializer()
         with tf.Session() as sess:
-            init.run()
-            for ep in range(self.epochs):
-                feed_dict = {action_ph: 0}
-                for i in range(self.n_layers[0], series_train_length):
-                    feed_dict[input_ph[i - self.n_layers[0]]] = i_train[(i - self.n_layers[0]):i, ].reshape((self.n_layers[0]*self.n_features,1))
-                    feed_dict[output_ph[i - self.n_layers[0]]] = o_train[i]
+            accum_rew, a, past_a = 0, 0, 0
+            actions,rewards, dates_o, instrument_o = [], [], [], []
+            for j in range(self.n_layers[0], self.n_layers[0] + self.n_actions): #Execute n actions
+                init.run()
+                #Train
+                for ep in range(self.epochs):
+                    feed_dict = {action_ph: 0}
+                    for index in range(self.window_size):
+                        i = index + j
+                        feed_dict[input_ph[index - self.n_layers[0]]] = X[(i - self.n_layers[0]):i, ].reshape((self.n_layers[0]*self.n_features,1))
+                        feed_dict[output_ph[index - self.n_layers[0]]] = y[i]
 
-                reward,  _ = sess.run([u, optimizer], feed_dict=feed_dict)
-                print("epoch: " + str(ep) + ", reward: " + str(reward))
+                    acum_reward, _ = sess.run([u, optimizer], feed_dict=feed_dict)
+                    #print("epoch: ", str(ep), ", accumulate reward: ", str(acum_reward))
 
-            Ws_real, bs_real = sess.run([Ws, bs])
+                Ws_real, bs_real = sess.run([Ws, bs])
 
-            print('Weights')
-            print(Ws_real)
-            print('Biases')
-            print(bs_real)
+                i+=1
 
-            i_test_ph = tf.placeholder(constants.float_type_tf, shape=[self.n_layers[0] * self.n_features, 1])
-            f_a_ph = tf.placeholder(constants.float_type_tf, shape=())
+                dates_o.append(dates[i])
+                instrument_o.append(instrument[i])
 
-            action = self.get_action(i_test_ph, f_a_ph, Ws_real, bs_real)
+                #Test
+                i_test_ph = tf.placeholder(constants.float_type_tf, shape=[self.n_layers[0] * self.n_features, 1])
+                f_a_ph = tf.placeholder(constants.float_type_tf, shape=())
 
-            a = 0
-            accum_rew = 0
-            past_a = a
-            actions = []
-            rewards = []
-            for i in range(self.n_layers[0], series_test_length):
+                action = self.get_action(i_test_ph, f_a_ph, Ws_real, bs_real)
 
-                a = sess.run(action, feed_dict={i_test_ph:i_test[(i - self.n_layers[0]):i].reshape((self.n_layers[0] * self.n_features, 1)),
-                                                     f_a_ph:a})
+                a = sess.run(action, feed_dict={i_test_ph:X[(i - self.n_layers[0]):i].reshape((self.n_layers[0] * self.n_features, 1)), f_a_ph:a})
                 actions.append(a)
 
-                print('action predicted: ' + str(a))
-
-                rew = self.functions.reward(o_test[i], self.c, a, past_a)
+                rew = self.functions.reward(y[i], self.c, a, past_a)
                 past_a = a
 
                 accum_rew += rew
                 rewards.append(accum_rew)
 
-        return rewards, actions
+                print('action predicted: ', str(a), ', reward: ', str(rew), ', accumulated reward: ', str(accum_rew))
 
-    def init_weights_and_biases(self):
-        l=len(self.n_layers)
+        return rewards, actions, dates_o, instrument_o
+
+    def weights_and_biases(self):
         Ws = []
         bs = []
         dim_before = self.n_layers[0] * self.n_features + 1
-        Ws.append(tf.Variable(tf.random_uniform([1, dim_before]), dtype=constants.float_type_tf)) #Input layer
+        Ws.append(tf.Variable(tf.random_uniform([1, dim_before]), dtype=constants.float_type_tf))
         bs.append(tf.Variable(tf.zeros([dim_before]), dtype=constants.float_type_tf))
 
-        for i in range(1, l): #Hidden layers
+        for i in range(1, len(self.n_layers)):
             dim = self.n_layers[i]
             Ws.append(tf.Variable(tf.random_uniform([dim_before, dim]),dtype=constants.float_type_tf))
             bs.append(tf.Variable(tf.zeros([dim]), dtype=constants.float_type_tf))
             dim_before = dim
 
         bs.append(tf.Variable(tf.zeros([1]), dtype=constants.float_type_tf))
-        Ws.append(tf.Variable(tf.random_uniform([dim_before, 1]), dtype=constants.float_type_tf)) #Output layer
+        Ws.append(tf.Variable(tf.random_uniform([dim_before, 1]), dtype=constants.float_type_tf))
 
         return Ws, bs
 
@@ -105,37 +116,20 @@ class Model():
         l = len(self.n_layers)
 
         input = tf.concat([input_standard, tf.reshape(action, (1, 1))], 0)
-        hidden_layer_i = constants.f(tf.add(tf.matmul(input, Ws[0]), bs[0])) #Input layer
+        hidden_layer_i = constants.f(tf.add(tf.matmul(input, Ws[0]), bs[0]))
 
-        for i in range(1, l): #Hidden layers
+        for i in range(1, l):
             hidden_layer_i = constants.f(tf.add(tf.matmul(hidden_layer_i, Ws[i]), bs[i]))
 
-        output_layer = constants.f(tf.add(tf.matmul(hidden_layer_i, Ws[l]), bs[l])) #Output layer
+        output_layer = constants.f(tf.add(tf.matmul(hidden_layer_i, Ws[l]), bs[l]))
 
-        return tf.transpose(output_layer)[0][0] #tf.sign(tf.transpose(output_layer)[0][0])
+        return tf.transpose(output_layer)[0][0]
 
-    def init_placeholders(self, len):
+    def init_placeholders(self):
         input_ph = []
         output_ph = []
-        for i in range(len):
+        for i in range(self.window_size):
             input_ph.append(tf.placeholder(constants.float_type_tf, shape=[self.n_layers[0] * self.n_features, 1]))
             output_ph.append(tf.placeholder(constants.float_type_tf, shape=()))
 
         return input_ph, output_ph
-
-    def optimize_all(self, Ws, bs, l):
-
-        input_ph, output_ph = self.init_placeholders(l)
-
-        rewards = []
-        action_ph = tf.placeholder(constants.float_type_tf, shape=())
-        past_action = action_ph
-        for i in range(l):
-            action = self.get_action(input_ph[i], past_action, Ws, bs)
-            rewards.append(self.functions.reward(output_ph[i], self.c, action, past_action))
-            past_action = action
-
-        u = self.functions.utility(rewards)
-        optimizer = tf.train.RMSPropOptimizer(learning_rate=self.learning_rate).minimize(-u)
-
-        return u, optimizer, input_ph, output_ph, action_ph

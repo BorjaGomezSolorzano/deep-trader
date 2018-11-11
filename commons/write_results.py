@@ -11,11 +11,7 @@ def sharpe_c(rewards):
     for i in range(1, len(rewards)):
         mu = np.mean(rewards[:i + 1])
         sigma = np.std(rewards[:i + 1])
-
-        if sigma == 0:
-            continue
-
-        sharpe[i] = mu / sigma
+        sharpe[i] = 0 if sigma == 0 else mu / sigma
 
     return sharpe
 

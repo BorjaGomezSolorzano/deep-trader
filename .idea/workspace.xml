@@ -2,23 +2,19 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="e3232149-d17c-4669-989b-c05a850a6c39" name="Default" comment="">
-      <change type="DELETED" beforePath="$PROJECT_DIR$/results/EURUSD_0.001.csv" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/results/EURUSD_0.001.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/results/EURUSD_0.01.csv" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/results/EURUSD_0.01.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/results/EURUSD_0.1.csv" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/results/EURUSD_0.1.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/results/GBPAUD_0.001.csv" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/results/GBPAUD_0.001.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/results/GBPAUD_0.1.csv" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/results/GBPAUD_0.1.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/results/XAUUSD_0.001.csv" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/results/XAUUSD_0.001.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/results/XAUUSD_0.01.csv" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/results/XAUUSD_0.01.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/results/XAUUSD_0.1.csv" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/results/XAUUSD_0.1.html" afterPath="" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client/main.py" afterPath="$PROJECT_DIR$/client/main.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/commons/price_feed.py" afterPath="$PROJECT_DIR$/commons/price_feed.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/commons/write_results.py" afterPath="$PROJECT_DIR$/commons/write_results.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/config/config.yaml" afterPath="$PROJECT_DIR$/config/config.yaml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/model/model.py" afterPath="$PROJECT_DIR$/model/model.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/model/rlFunctions.py" afterPath="$PROJECT_DIR$/model/rlFunctions.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/results/XAUUSD_0.001.csv" afterPath="$PROJECT_DIR$/results/XAUUSD_0.001.csv" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/results/XAUUSD_0.001.html" afterPath="$PROJECT_DIR$/results/XAUUSD_0.001.html" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -28,72 +24,24 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="FileEditorManager">
-    <splitter split-orientation="horizontal" split-proportion="0.6604803">
+    <splitter split-orientation="horizontal" split-proportion="0.21955404">
       <split-first>
         <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-          <file leaf-file-name="model.py" pinned="false" current-in-tab="true">
-            <entry file="file://$PROJECT_DIR$/model/model.py">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="60">
-                  <caret line="105" column="0" lean-forward="true" selection-start-line="105" selection-start-column="0" selection-end-line="105" selection-end-column="0" />
-                  <folding>
-                    <element signature="e#71#80#0" expanded="true" />
-                  </folding>
-                </state>
-              </provider>
-            </entry>
-          </file>
           <file leaf-file-name="write_results.py" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/commons/write_results.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="170">
-                  <caret line="11" column="37" lean-forward="true" selection-start-line="11" selection-start-column="37" selection-end-line="11" selection-end-column="37" />
+                <state relative-caret-position="119">
+                  <caret line="26" column="13" lean-forward="false" selection-start-line="26" selection-start-column="13" selection-end-line="26" selection-end-column="13" />
                   <folding />
                 </state>
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="interactive_plots.py" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/commons/interactive_plots.py">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="17">
-                  <caret line="15" column="32" lean-forward="false" selection-start-line="15" selection-start-column="4" selection-end-line="15" selection-end-column="32" />
-                  <folding>
-                    <element signature="e#71#80#0" expanded="true" />
-                  </folding>
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="main.py" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/client/main.py">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="286">
-                  <caret line="46" column="0" lean-forward="false" selection-start-line="46" selection-start-column="0" selection-end-line="46" selection-end-column="0" />
-                  <folding />
-                </state>
-              </provider>
-            </entry>
-          </file>
-        </leaf>
-      </split-first>
-      <split-second>
-        <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
           <file leaf-file-name="config.yaml" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/config/config.yaml">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="17">
-                  <caret line="1" column="3" lean-forward="true" selection-start-line="1" selection-start-column="3" selection-end-line="1" selection-end-column="3" />
-                  <folding />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="price_feed.py" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/commons/price_feed.py">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="275">
-                  <caret line="72" column="38" lean-forward="true" selection-start-line="72" selection-start-column="38" selection-end-line="72" selection-end-column="38" />
+                <state relative-caret-position="136">
+                  <caret line="8" column="10" lean-forward="false" selection-start-line="8" selection-start-column="10" selection-end-line="8" selection-end-column="10" />
                   <folding />
                 </state>
               </provider>
@@ -102,8 +50,44 @@
           <file leaf-file-name="rlFunctions.py" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/model/rlFunctions.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="102">
-                  <caret line="7" column="47" lean-forward="false" selection-start-line="7" selection-start-column="47" selection-end-line="7" selection-end-column="47" />
+                <state relative-caret-position="85">
+                  <caret line="5" column="12" lean-forward="false" selection-start-line="5" selection-start-column="12" selection-end-line="5" selection-end-column="12" />
+                  <folding />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="main.py" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/client/main.py">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="274">
+                  <caret line="38" column="79" lean-forward="false" selection-start-line="38" selection-start-column="79" selection-end-line="38" selection-end-column="79" />
+                  <folding />
+                </state>
+              </provider>
+            </entry>
+          </file>
+        </leaf>
+      </split-first>
+      <split-second>
+        <leaf>
+          <file leaf-file-name="model.py" pinned="false" current-in-tab="true">
+            <entry file="file://$PROJECT_DIR$/model/model.py">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="34">
+                  <caret line="70" column="50" lean-forward="false" selection-start-line="70" selection-start-column="50" selection-end-line="70" selection-end-column="50" />
+                  <folding>
+                    <element signature="e#71#80#0" expanded="true" />
+                  </folding>
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="price_feed.py" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/commons/price_feed.py">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="-95">
+                  <caret line="20" column="14" lean-forward="false" selection-start-line="20" selection-start-column="14" selection-end-line="20" selection-end-column="14" />
                   <folding />
                 </state>
               </provider>
@@ -133,11 +117,12 @@
         <option value="$PROJECT_DIR$/commons/plot_results.py" />
         <option value="$PROJECT_DIR$/commons/logUtils.py" />
         <option value="$PROJECT_DIR$/tests/tests.py" />
-        <option value="$PROJECT_DIR$/commons/write_results.py" />
         <option value="$PROJECT_DIR$/commons/interactive_plots.py" />
-        <option value="$PROJECT_DIR$/client/main.py" />
         <option value="$PROJECT_DIR$/model/rlFunctions.py" />
+        <option value="$PROJECT_DIR$/commons/write_results.py" />
+        <option value="$PROJECT_DIR$/data/GBPUSD.csv" />
         <option value="$PROJECT_DIR$/commons/price_feed.py" />
+        <option value="$PROJECT_DIR$/client/main.py" />
         <option value="$PROJECT_DIR$/model/model.py" />
         <option value="$PROJECT_DIR$/config/config.yaml" />
       </list>
@@ -165,17 +150,13 @@
     </navigator>
     <panes>
       <pane id="Scratches" />
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
             <path>
               <item name="deep-trader-master" type="b2602c69:ProjectViewProjectNode" />
               <item name="deep-trader-master" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="deep-trader-master" type="b2602c69:ProjectViewProjectNode" />
-              <item name="deep-trader-master" type="462c0819:PsiDirectoryNode" />
-              <item name="client" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="deep-trader-master" type="b2602c69:ProjectViewProjectNode" />
@@ -191,7 +172,6 @@
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -281,29 +261,36 @@
       <option name="project" value="LOCAL" />
       <updated>1540772116663</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="bugs fixed">
+      <created>1541374869911</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1541374869911</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1382" height="744" extended-state="6" />
     <layout>
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.25869894" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.15733737" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3633388" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.28805238" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.37806875" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.44680852" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.497545" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Data View" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3633388" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
     </layout>
   </component>
@@ -319,19 +306,16 @@
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/commons/price_feed.py</url>
-          <line>46</line>
-          <option name="timeStamp" value="43" />
+          <url>file://$PROJECT_DIR$/model/model.py</url>
+          <line>78</line>
+          <option name="timeStamp" value="61" />
         </line-breakpoint>
       </breakpoints>
-      <option name="time" value="48" />
+      <option name="time" value="62" />
     </breakpoint-manager>
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/deep-trader/process_data.py" />
-    <entry file="file://$PROJECT_DIR$/deep-trader/Direct_Reinforcement_Learning.py" />
-    <entry file="file://$PROJECT_DIR$/deep-trader/rlFunctions.py" />
     <entry file="file://$PROJECT_DIR$/deep-trader/Direct_Reinforcement_Learning.py" />
     <entry file="file://$PROJECT_DIR$/deep-trader/process_data.py" />
     <entry file="file://$PROJECT_DIR$/data/EURUSD.csv" />
@@ -384,9 +368,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="153">
           <caret line="13" column="3" lean-forward="false" selection-start-line="13" selection-start-column="3" selection-end-line="13" selection-end-column="3" />
-          <folding>
-            <element signature="e#71#80#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -418,9 +399,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="680">
           <caret line="44" column="0" lean-forward="true" selection-start-line="44" selection-start-column="0" selection-end-line="44" selection-end-column="0" />
-          <folding>
-            <element signature="e#71#80#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -476,13 +454,6 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/data/XAUUSD1440.csv" />
-    <entry file="file://$PROJECT_DIR$/data/XAUUSD.csv">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="87822">
-          <caret line="5166" column="19" lean-forward="false" selection-start-line="5166" selection-start-column="19" selection-end-line="5166" selection-end-column="19" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/results/XAUUSD_0.001.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
@@ -490,36 +461,60 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$USER_HOME$/Anaconda3/Lib/site-packages/tensorflow/python/client/session.py">
+    <entry file="file://$USER_HOME$/Anaconda3/Lib/site-packages/tensorflow/python/framework/common_shapes.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="408">
-          <caret line="1173" column="59" lean-forward="true" selection-start-line="1173" selection-start-column="59" selection-end-line="1173" selection-end-column="59" />
-          <folding />
+        <state relative-caret-position="142">
+          <caret line="665" column="26" lean-forward="true" selection-start-line="665" selection-start-column="26" selection-end-line="665" selection-end-column="26" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/tests/tests.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="136">
+          <caret line="8" column="3" lean-forward="false" selection-start-line="8" selection-start-column="3" selection-end-line="8" selection-end-column="3" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/commons/interactive_plots.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="17">
-          <caret line="15" column="32" lean-forward="false" selection-start-line="15" selection-start-column="4" selection-end-line="15" selection-end-column="32" />
-          <folding>
-            <element signature="e#71#80#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="85">
+          <caret line="19" column="38" lean-forward="false" selection-start-line="19" selection-start-column="38" selection-end-line="19" selection-end-column="38" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/commons/write_results.py">
+    <entry file="file://$PROJECT_DIR$/data/XAUUSD.csv">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="170">
-          <caret line="11" column="37" lean-forward="true" selection-start-line="11" selection-start-column="37" selection-end-line="11" selection-end-column="37" />
+        <state relative-caret-position="375">
+          <caret line="5166" column="19" lean-forward="false" selection-start-line="5166" selection-start-column="19" selection-end-line="5166" selection-end-column="19" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/data/GBPUSD.csv">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="323">
+          <caret line="19" column="47" lean-forward="true" selection-start-line="19" selection-start-column="47" selection-end-line="19" selection-end-column="47" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/Anaconda3/Lib/site-packages/colorama/ansitowin32.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="69">
+          <caret line="34" column="0" lean-forward="true" selection-start-line="34" selection-start-column="0" selection-end-line="34" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/Anaconda3/Lib/site-packages/tensorflow/python/framework/ops.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="129">
+          <caret line="1268" column="0" lean-forward="false" selection-start-line="1268" selection-start-column="0" selection-end-line="1268" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/client/main.py">
+    <entry file="file://$PROJECT_DIR$/model/rlFunctions.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="286">
-          <caret line="46" column="0" lean-forward="false" selection-start-line="46" selection-start-column="0" selection-end-line="46" selection-end-column="0" />
+        <state relative-caret-position="85">
+          <caret line="5" column="12" lean-forward="false" selection-start-line="5" selection-start-column="12" selection-end-line="5" selection-end-column="12" />
           <folding />
         </state>
       </provider>
@@ -532,52 +527,50 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$USER_HOME$/Anaconda3/Lib/site-packages/tensorflow/python/framework/common_shapes.py">
+    <entry file="file://$USER_HOME$/Anaconda3/Lib/site-packages/tensorflow/python/client/session.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="142">
-          <caret line="665" column="26" lean-forward="true" selection-start-line="665" selection-start-column="26" selection-end-line="665" selection-end-column="26" />
+        <state relative-caret-position="106">
+          <caret line="270" column="0" lean-forward="false" selection-start-line="270" selection-start-column="0" selection-end-line="270" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/tests/tests.py">
+    <entry file="file://$PROJECT_DIR$/commons/write_results.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="136">
-          <caret line="8" column="3" lean-forward="false" selection-start-line="8" selection-start-column="3" selection-end-line="8" selection-end-column="3" />
-          <folding>
-            <element signature="e#0#23#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="119">
+          <caret line="26" column="13" lean-forward="false" selection-start-line="26" selection-start-column="13" selection-end-line="26" selection-end-column="13" />
+          <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/model/rlFunctions.py">
+    <entry file="file://$PROJECT_DIR$/client/main.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="102">
-          <caret line="7" column="47" lean-forward="false" selection-start-line="7" selection-start-column="47" selection-end-line="7" selection-end-column="47" />
+        <state relative-caret-position="274">
+          <caret line="38" column="79" lean-forward="false" selection-start-line="38" selection-start-column="79" selection-end-line="38" selection-end-column="79" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/commons/price_feed.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="275">
-          <caret line="72" column="38" lean-forward="true" selection-start-line="72" selection-start-column="38" selection-end-line="72" selection-end-column="38" />
+        <state relative-caret-position="-95">
+          <caret line="20" column="14" lean-forward="false" selection-start-line="20" selection-start-column="14" selection-end-line="20" selection-end-column="14" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/config/config.yaml">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="17">
-          <caret line="1" column="3" lean-forward="true" selection-start-line="1" selection-start-column="3" selection-end-line="1" selection-end-column="3" />
+        <state relative-caret-position="136">
+          <caret line="8" column="10" lean-forward="false" selection-start-line="8" selection-start-column="10" selection-end-line="8" selection-end-column="10" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/model/model.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="60">
-          <caret line="105" column="0" lean-forward="true" selection-start-line="105" selection-start-column="0" selection-end-line="105" selection-end-column="0" />
+        <state relative-caret-position="34">
+          <caret line="70" column="50" lean-forward="false" selection-start-line="70" selection-start-column="50" selection-end-line="70" selection-end-column="50" />
           <folding>
             <element signature="e#71#80#0" expanded="true" />
           </folding>
