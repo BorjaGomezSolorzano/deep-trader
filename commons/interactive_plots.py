@@ -10,10 +10,40 @@ from plotly import tools
 import plotly.offline as py
 import plotly.graph_objs as go
 import datetime
+import yaml
 
-path = os.path.abspath(os.path.dirname(__file__))
 
-def plotly_interactive_decisions(date_string, dates, data, rewards, decisions, sharpe, config):
+dirname = os.path.abspath(os.path.dirname(__file__))
+filename = os.path.join(dirname, "../config/config.yaml")
+config = yaml.load(open(filename, 'r'))
+
+
+def commission_analysis(data_02, data_05, data_1):
+
+    trace02 = go.Box(
+        y=data_02,
+        name = "0.2%"
+    )
+    trace05 = go.Box(
+        y=data_05,
+        name = "0.5%"
+    )
+    trace1 = go.Box(
+        y=data_1,
+        name="1%"
+    )
+    data = [trace02, trace05, trace1]
+
+    layout = go.Layout(
+        title="Commissions impact"
+    )
+
+    fig = go.Figure(data=data, layout=layout)
+
+    py.plot(fig, filename='{}.html'.format("../results/commissions_analysis_" + config['instrument'] + '_' + str(config['c'])))
+
+
+def price_rewards_actions_utility_plot(date_string, dates, data, rewards, decisions, sharpe):
 
     data_trace = go.Scatter(
         x=[x for x in dates] if date_string else [datetime.datetime.utcfromtimestamp(int(x) / 1000) for x in dates],

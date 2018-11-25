@@ -9,48 +9,38 @@ import os
 
 import numpy as np
 import pandas as pd
-from sklearn.preprocessing import MinMaxScaler
-
+import yaml
 from commons import constants
 
-dirname = os.path.dirname(__file__)
+dirname = os.path.abspath(os.path.dirname(__file__))
+filename = os.path.join(dirname, "../config/config.yaml")
+config = yaml.load(open(filename, 'r'))
 
 class Feeder:
 
-    def __init__(self, config):
-        self.config = config
+    def __init__(self):
         self.filename = os.path.join(dirname, '../data/' + config['instrument'] + '.csv')
         self.features_len = len(config['features_idx'])
 
-    # convert an array of values into a dataset matrix
-    def create_dataset(self, dataset):
-        returns_idx = dataset.shape[1]-1
-        dataX, dataY = [], []
-        for i in range(len(dataset) - 1):
-            dataX.append(dataset[i, self.config['features_idx']])
-            dataY.append(dataset[i, returns_idx])
-
-        return np.array(dataX, dtype=constants.float_type_np), np.array(dataY, dtype=constants.float_type_np)
-
     def process(self):
-        df = pd.read_csv(self.filename, skiprows=1)
-        df['prices_diff'] = df.iloc[:,self.config['instrument_idx']].diff(periods=1)
+        df = pd.read_csv(self.filename, names=["Time","Open","Max","Min","Close","Volume"], skiprows=1)
+        df['prices_diff'] = df.iloc[:,config['instrument_idx']].diff(periods=1)
         df['prices_diff'] = df['prices_diff'].shift(-1)
         df = df[pd.notnull(df['prices_diff'])]
 
-        df = df.tail(self.config['last_n_values'])
+        df = df.tail(config['last_n_values'])
 
         dataset = df.values
 
-        self.scaler = MinMaxScaler(feature_range=(-1, 1))
-        dataset[:, self.config['features_idx']] = self.scaler.fit_transform(dataset[:, self.config['features_idx']])
-
-        X, y = self.create_dataset(dataset[:, :])
-
         dates = dataset[:, 0]
-        instrument = dataset[:, self.config['instrument_idx']]
+        instrument = np.copy(dataset[:, config['instrument_idx']])
+
+        returns_idx = dataset.shape[1] - 1
+        X_aux, y_aux = [], []
+        for i in range(len(dataset) - 1):
+            X_aux.append(dataset[i, config['features_idx']])
+            y_aux.append(dataset[i, returns_idx])
+
+        X, y = np.array(X_aux, dtype=constants.float_type_np), np.array(y_aux, dtype=constants.float_type_np)
 
         return X, y, dates, instrument
-
-    def denormalize(self, data):
-        return self.scaler.inverse_transform(data)

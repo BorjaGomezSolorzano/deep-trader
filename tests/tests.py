@@ -1,9 +1,8 @@
-import tensorflow as tf
-import commons.constants
+from commons.interactive_plots import commission_analysis
+from commons.write_results import read_simple_rewards_commissions
 
-x = tf.placeholder(commons.constants.float_type_tf, shape=[3, 1])
-action = tf.placeholder(tf.float32, shape=(), name="action")
+decission_changes_02 = read_simple_rewards_commissions('0.002')
+decission_changes_05 = read_simple_rewards_commissions('0.005')
+decission_changes_1 = read_simple_rewards_commissions('0.01')
 
-x1 = tf.concat([x, tf.reshape(action,(1,1))], 0)
-
-r=1
+commission_analysis(decission_changes_02, decission_changes_05, decission_changes_1)

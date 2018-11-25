@@ -11,34 +11,29 @@ os.environ['TZ'] = 'utc'
 import yaml
 from commons.price_feed import Feeder
 from commons.logUtils import get_logger
-from model.model import Model
-from commons.interactive_plots import plotly_interactive_decisions
-from commons.write_results import write, read
+from model.trainer import Model
+from commons.interactive_plots import price_rewards_actions_utility_plot
+from commons.write_results import write, read_price_actions_rewards
 
 logger = get_logger(os.path.basename(__file__))
 
-dirname = os.path.abspath(os.path.dirname(__file__))
-filename = os.path.join(dirname, "../config/config.yaml")
-
 def read_csv():
-  config = yaml.load(open(filename, 'r'))
 
-  dates, data, rewards, sharpe, decisions = read(config)
+  dates, data, rewards, sharpe, decisions = read_price_actions_rewards()
 
-  plotly_interactive_decisions(True, dates, data, rewards, decisions, sharpe, config=config)
+  price_rewards_actions_utility_plot(True, dates, data, rewards, decisions, sharpe)
 
 
 def write_csv():
-  config = yaml.load(open(filename, 'r'))
 
-  feeder = Feeder(config)
+  feeder = Feeder()
 
   X, y, dates, instrument = feeder.process()
 
   model = Model()
-  rewards, actions, dates_o, instrument_o = model.train(X, y, dates, instrument)
+  rewards, actions, dates_o, instrument_o = model.execute(X, y, dates, instrument)
 
-  write(config, dates_o, instrument_o, rewards, actions)
+  write(dates_o, instrument_o, rewards, actions)
 
 
 if __name__ == '__main__':
