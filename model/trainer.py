@@ -35,8 +35,7 @@ class Model():
 
     def execute(self, X, y, dates, instrument):
 
-        if self.window_size < self.n_layers[0]: #FIXME Sacar esto fuera
-            print('ERROR, NOT ENOUGH DATA')
+        tf.set_random_seed(1)
 
         Ws, bs = weights_and_biases()
 
@@ -57,7 +56,7 @@ class Model():
             past_action_train = action_train
 
         u = self.functions.utility(rewards_train)
-        optimizer = tf.train.GradientDescentOptimizer(learning_rate=self.learning_rate).minimize(-u)
+        optimizer = tf.train.AdamOptimizer(learning_rate=self.learning_rate).minimize(-u)
 
         self.scaler = MinMaxScaler(feature_range=(-1, 1))
 
@@ -67,12 +66,12 @@ class Model():
         a, past_a = 0, 0
         actions_returned, simple_rewards, dates_o, instrument_o = [], [], [], []
 
-        init = tf.global_variables_initializer()
+        init = tf.initialize_all_variables()
         with tf.Session() as sess:
 
             for j in range(self.n_layers[0], self.n_layers[0] + self.n_actions):
 
-                init.run()
+                sess.run(init)
 
                 #Train
                 for ep in range(self.epochs):
@@ -80,8 +79,8 @@ class Model():
                     for index in range(self.window_size):
                         i = index + j
                         x=X_transformed[((i+1) - self.n_layers[0]):(i+1)].reshape((self.n_layers[0]*self.n_features,1))
-                        feed_dict[input_ph[index - self.n_layers[0]]] = x
-                        feed_dict[output_ph[index - self.n_layers[0]]] = y[i]
+                        feed_dict[input_ph[index]] = x
+                        feed_dict[output_ph[index]] = y[i]
 
                     acum_reward, aa, _, Ws_out = sess.run([u, actions_train, optimizer, Ws], feed_dict=feed_dict)
                     #print("epoch: ", str(ep), ", accumulate reward: ", str(acum_reward), ', ', aa)
@@ -109,6 +108,6 @@ class Model():
 
                 simple_rewards.append(rew)
 
-                print(str(i), ' action predicted: ', str(a), ', reward: ', str(rew), ', accumulated reward: ', str(accum_rewards))
+                print(str(i), ' action predicted: ', str(np.sign(a)), ', reward: ', str(rew), ', accumulated reward: ', str(accum_rewards))
 
         return simple_rewards, actions_returned, dates_o, instrument_o

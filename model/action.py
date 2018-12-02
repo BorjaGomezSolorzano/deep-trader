@@ -18,5 +18,4 @@ def get_action(input_standard, action, Ws, bs):
 
     output_layer = constants.f(tf.add(tf.matmul(hidden_layer_i, Ws[l]), bs[l]))
 
-    #return tf.sign(tf.transpose(output_layer)[0][0])
     return tf.transpose(output_layer)[0][0]

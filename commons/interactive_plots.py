@@ -40,7 +40,7 @@ def commission_analysis(data_02, data_05, data_1):
 
     fig = go.Figure(data=data, layout=layout)
 
-    py.plot(fig, filename='{}.html'.format("../results/commissions_analysis_" + config['instrument'] + '_' + str(config['c'])))
+    py.plot(fig, filename='{}.html'.format("../results/commissions_analysis_" + config['instrument'] + '_' + str(config['c'])+ '_' + str(config['n_layers'])))
 
 
 def price_rewards_actions_utility_plot(date_string, dates, data, rewards, decisions, sharpe):
@@ -78,4 +78,4 @@ def price_rewards_actions_utility_plot(date_string, dates, data, rewards, decisi
 
     fig['layout'].update(height=800, width=1000, title='deep-trader {}'.format(config['instrument']))
 
-    py.plot(fig, filename='{}.html'.format("../results/" + config['instrument'] + '_' + str(config['c'])))
+    py.plot(fig, filename='{}.html'.format("../results/" + config['instrument'] + '_' + str(config['c'])+ '_' + str(config['n_layers'])))

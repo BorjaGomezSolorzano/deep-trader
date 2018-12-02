@@ -6,7 +6,7 @@ path = os.path.abspath(os.path.dirname(__file__))
 filename = os.path.join(path, "../config/config.yaml")
 config = yaml.load(open(filename, 'r'))
 
-filename_price_actions_rewards = os.path.join(path, "../results/" + config['instrument'] + '_' + str(config['c']) + '.csv')
+filename_price_actions_rewards = os.path.join(path, "../results/" + config['instrument'] + '_' + str(config['c']) + '_' + str(config['n_layers']) + '.csv')
 
 def sharpe_c(rewards, window_size):
     sharpe = np.zeros(len(rewards))
@@ -19,7 +19,7 @@ def sharpe_c(rewards, window_size):
     return sharpe
 
 def read_simple_rewards_commissions(commission_name):
-    filename_commission_analysis = os.path.join(path,"../results/commission_analysis_" + config['instrument'] + '_' + commission_name + '.csv')
+    filename_commission_analysis = os.path.join(path,"../results/commission_analysis_" + config['instrument'] + '_' + commission_name + '_' + str(config['n_layers']) + '.csv')
 
     decission_changes = []
     with open(filename_commission_analysis, "r") as file:
@@ -49,7 +49,7 @@ def read_price_actions_rewards():
 
 def write(dates_test, data, simple_rewards, decisions):
 
-    filename_commission_analysis = os.path.join(path,"../results/commission_analysis_" + config['instrument'] + '_' + str(config['c']) + '.csv')
+    filename_commission_analysis = os.path.join(path,"../results/commission_analysis_" + config['instrument'] + '_' + str(config['c'])+ '_' + str(config['n_layers']) + '.csv')
 
     with open(filename_commission_analysis, "w") as file:
         for i in range(1,len(decisions)):

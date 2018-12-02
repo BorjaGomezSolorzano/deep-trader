@@ -4,10 +4,10 @@ instrument: 'XAUUSD'
 features_idx: [1]
 instrument_idx: 1
 # Model variables
-c: 0.001
-learning_rate: 0.01
+c: 0.1
+learning_rate: 0.001
 epochs: 100
-n_layers: [10]
-window_size: 42
-n_actions: 200
-last_n_values: 500
+n_layers: [30]
+window_size: 21
+n_actions: 500
+last_n_values: 1000
