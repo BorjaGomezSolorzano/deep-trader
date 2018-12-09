@@ -10,7 +10,7 @@ config = yaml.load(open(filename, 'r'))
 def weights_and_biases():
     Ws = []
     bs = []
-    dim_before = config['n_layers'][0] * len(config['features_idx']) + 1
+    dim_before = config['n_layers'][0] * len(config['features_idx'])
     Ws.append(tf.Variable(tf.random_uniform([1, dim_before]), dtype=constants.float_type_tf))
     bs.append(tf.Variable(tf.zeros([dim_before]), dtype=constants.float_type_tf))
 
@@ -23,4 +23,6 @@ def weights_and_biases():
     Ws.append(tf.Variable(tf.random_uniform([dim_before, 1]), dtype=constants.float_type_tf))
     bs.append(tf.Variable(tf.zeros([1]), dtype=constants.float_type_tf))
 
-    return Ws, bs
+    Wa = tf.Variable(tf.random_uniform([1]), dtype=constants.float_type_tf)
+
+    return Ws, Wa, bs

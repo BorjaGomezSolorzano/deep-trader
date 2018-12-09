@@ -11,7 +11,7 @@ from commons import constants
 import tensorflow as tf
 import yaml
 from sklearn.preprocessing import MinMaxScaler
-from model.rlFunctions import Functions
+from model.rlFunctions import utility, reward_tf
 import numpy as np
 from model.weights_and_biases import weights_and_biases
 from model.action import get_action
@@ -30,14 +30,13 @@ class Model():
         self.epochs = config['epochs']
         self.window_size = config['window_size']
         self.n_actions = config['n_actions']
-        self.functions = Functions()
 
 
     def execute(self, X, y, dates, instrument):
 
         tf.set_random_seed(1)
 
-        Ws, bs = weights_and_biases()
+        Ws, Wa, bs = weights_and_biases()
 
         input_ph = []
         output_ph = []
@@ -46,16 +45,14 @@ class Model():
             output_ph.append(tf.placeholder(constants.float_type_tf, shape=()))
 
         rewards_train = []
-        actions_train = []
         action_train_ph = tf.placeholder(constants.float_type_tf, shape=())
         past_action_train = action_train_ph
         for i in range(self.window_size):
-            action_train = get_action(input_ph[i], past_action_train, Ws, bs)
-            rewards_train.append(self.functions.reward_tf(output_ph[i], self.c, action_train, past_action_train))
-            actions_train.append(action_train)
+            action_train = get_action(input_ph[i], past_action_train, Ws, Wa, bs)
+            rewards_train.append(reward_tf(output_ph[i], self.c, action_train, past_action_train))
             past_action_train = action_train
 
-        u = self.functions.utility(rewards_train)
+        u = utility(rewards_train)
         optimizer = tf.train.AdamOptimizer(learning_rate=self.learning_rate).minimize(-u)
 
         self.scaler = MinMaxScaler(feature_range=(-1, 1))
@@ -64,7 +61,7 @@ class Model():
 
         accum_rewards = 0
         a, past_a = 0, 0
-        actions_returned, simple_rewards, dates_o, instrument_o = [], [], [], []
+        actions_returned, simple_rewards, dates_o, instrument_o, rew_epochs = [], [], [], [], [0 for k in range(self.epochs)]
 
         init = tf.initialize_all_variables()
         with tf.Session() as sess:
@@ -82,10 +79,11 @@ class Model():
                         feed_dict[input_ph[index]] = x
                         feed_dict[output_ph[index]] = y[i]
 
-                    acum_reward, aa, _, Ws_out = sess.run([u, actions_train, optimizer, Ws], feed_dict=feed_dict)
+                    acum_reward, _ = sess.run([u, optimizer], feed_dict=feed_dict)
+                    rew_epochs[ep] += acum_reward
                     #print("epoch: ", str(ep), ", accumulate reward: ", str(acum_reward), ', ', aa)
 
-                Ws_real, bs_real = sess.run([Ws, bs])
+                Ws_real, Wa_real, bs_real = sess.run([Ws, Wa, bs])
 
                 i+=1
 
@@ -96,7 +94,7 @@ class Model():
                 i_test_ph = tf.placeholder(constants.float_type_tf, shape=[self.n_layers[0] * self.n_features, 1])
                 f_a_ph = tf.placeholder(constants.float_type_tf, shape=())
 
-                a_test = get_action(i_test_ph, f_a_ph, Ws_real, bs_real)
+                a_test = get_action(i_test_ph, f_a_ph, Ws_real, Wa_real, bs_real)
 
                 x = X_transformed[((i+1) - self.n_layers[0]):(i+1),].reshape((self.n_layers[0] * self.n_features, 1))
                 a = sess.run(a_test, feed_dict={i_test_ph:x, f_a_ph:a})
@@ -108,6 +106,9 @@ class Model():
 
                 simple_rewards.append(rew)
 
-                print(str(i), ' action predicted: ', str(np.sign(a)), ', reward: ', str(rew), ', accumulated reward: ', str(accum_rewards))
+                print(str(i), ' action predicted: ', str(a), ', reward: ', str(rew), ', accumulated reward: ', str(accum_rewards))
 
-        return simple_rewards, actions_returned, dates_o, instrument_o
+        for k in range(self.epochs):
+            rew_epochs[k] /= self.epochs
+
+        return simple_rewards, actions_returned, dates_o, instrument_o, rew_epochs

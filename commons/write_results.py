@@ -1,22 +1,37 @@
 import os
 import numpy as np
 import yaml
+from model.rlFunctions import sharpe
 
 path = os.path.abspath(os.path.dirname(__file__))
 filename = os.path.join(path, "../config/config.yaml")
 config = yaml.load(open(filename, 'r'))
 
 filename_price_actions_rewards = os.path.join(path, "../results/" + config['instrument'] + '_' + str(config['c']) + '_' + str(config['n_layers']) + '.csv')
+filename_epochs = os.path.join(path,"../results/convergence_" + config['instrument'] + '_' + str(config['c']) + '_' + str(config['n_layers']) + '.csv')
 
-def sharpe_c(rewards, window_size):
-    sharpe = np.zeros(len(rewards))
 
-    for i in range(0, len(rewards)):
-        mu = np.mean(rewards[max(i-window_size,0):(i+1)])
-        sigma = np.std(rewards[max(i-window_size,0):(i+1)])
-        sharpe[i] = 0 if sigma == 0 else mu / sigma
+def sharpe_c(rewards):
 
-    return sharpe
+    window_size = config['window_size']
+    sharpe_reaults = np.zeros(len(rewards))
+
+    for i in range(0, window_size):
+        sharpe_reaults[i] = 0
+
+    for i in range(window_size, len(rewards)):
+        sharpe_reaults[i] = sharpe(rewards[(i-window_size):(i+1)])
+
+    return sharpe_reaults
+
+def read_convergence():
+    decission_changes = []
+    with open(filename_epochs, "r") as file:
+        for line in file:
+            values = line.split(",")
+            decission_changes.append(values[0])
+
+    return decission_changes
 
 def read_simple_rewards_commissions(commission_name):
     filename_commission_analysis = os.path.join(path,"../results/commission_analysis_" + config['instrument'] + '_' + commission_name + '_' + str(config['n_layers']) + '.csv')
@@ -47,7 +62,11 @@ def read_price_actions_rewards():
 
     return dates, data, rewards, sharpe, decisions
 
-def write(dates_test, data, simple_rewards, decisions):
+def write(dates_test, data, simple_rewards, decisions, rew_epochs):
+
+    with open(filename_epochs, "w") as file:
+        for rew_epoch in rew_epochs:
+            file.write(str(rew_epoch) + "\n")
 
     filename_commission_analysis = os.path.join(path,"../results/commission_analysis_" + config['instrument'] + '_' + str(config['c'])+ '_' + str(config['n_layers']) + '.csv')
 
@@ -61,7 +80,7 @@ def write(dates_test, data, simple_rewards, decisions):
         sum += r
         rewards.append(sum)
 
-    sharpe = sharpe_c(rewards, config['window_size'])
+    sharpe = sharpe_c(simple_rewards)
     padding = np.zeros(len(data) - len(rewards))
     rewards = np.append(padding, rewards)
     sharpe = np.append(padding, sharpe)

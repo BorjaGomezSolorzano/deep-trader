@@ -4,10 +4,10 @@ instrument: 'XAUUSD'
 features_idx: [1]
 instrument_idx: 1
 # Model variables
-c: 0.1
+c: 0.5
 learning_rate: 0.001
 epochs: 100
-n_layers: [30]
+n_layers: [30, 30] #FIXME Has to be the same number in each layer!!
 window_size: 21
 n_actions: 500
 last_n_values: 1000

@@ -79,3 +79,23 @@ def price_rewards_actions_utility_plot(date_string, dates, data, rewards, decisi
     fig['layout'].update(height=800, width=1000, title='deep-trader {}'.format(config['instrument']))
 
     py.plot(fig, filename='{}.html'.format("../results/" + config['instrument'] + '_' + str(config['c'])+ '_' + str(config['n_layers'])))
+
+def convergence_plot(rew_epochs):
+
+    rewards_trace = go.Scatter(
+        x=[str(x) for x in range(config['epochs'])],
+        y=[round(float(x), 4) for x in rew_epochs],
+        name="rewards",
+    )
+
+    data = [rewards_trace]
+
+    # Edit the layout
+    layout = dict(title='Average Sharpe by Epoch',
+                  xaxis=dict(title='Epochs'),
+                  yaxis=dict(title='Sharpe'),
+                  )
+
+    fig = dict(data=data, layout=layout)
+
+    py.plot(fig, filename='{}.html'.format("../results/convergence_" + config['instrument'] + '_' + str(config['c'])+ '_' + str(config['n_layers'])))
