@@ -11,7 +11,7 @@ from commons import constants
 import tensorflow as tf
 import yaml
 from sklearn.preprocessing import MinMaxScaler
-from model.rlFunctions import utility, reward_tf
+from model.rlFunctions import utility, reward_tf, reward_np
 import numpy as np
 from model.weights_and_biases import weights_and_biases
 from model.action import get_action
@@ -100,7 +100,7 @@ class Model():
                 a = sess.run(a_test, feed_dict={i_test_ph:x, f_a_ph:a})
                 actions_returned.append(a)
 
-                rew = self.functions.reward_np(y[i], self.c, a, past_a)
+                rew = reward_np(y[i], self.c, a, past_a)
                 accum_rewards += rew
                 past_a = a
 

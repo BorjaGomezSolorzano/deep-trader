@@ -8,13 +8,13 @@ filename = os.path.join(path, "../config/config.yaml")
 config = yaml.load(open(filename, 'r'))
 
 
-def reward_tf(self, u, c, action_t, action_t1):
+def reward_tf(u, c, action_t, action_t1):
     return (u * action_t - c * tf.abs(action_t - action_t1))
 
-def reward_np(self, u, c, action_t, action_t1):
+def reward_np(u, c, action_t, action_t1):
     return (u * action_t - c * np.abs(action_t - action_t1))
 
-def sharpe(self, returns):
+def sharpe(returns):
     """
 
     :param returns:
@@ -36,10 +36,10 @@ def sharpe(self, returns):
     return 0 if sigma == 0 else mu / sigma
 
 
-def utility(self, returns):
+def utility(returns):
     """
 
     :param returns:
     :return:
     """
-    return self.sharpe(returns)
+    return sharpe(returns)
