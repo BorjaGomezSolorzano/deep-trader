@@ -7,7 +7,7 @@ instrument_idx: 1
 c: 1
 learning_rate: 0.001
 epochs: 100
-n_layers: [30] #FIXME Has to be the same number in each layer!!
+n_layers: [30,30] #FIXME Has to be the same number in each layer!! FIRST:input, SCND: hidden_1, ...
 window_size: 21
 n_actions: 500
 last_n_values: 1000
