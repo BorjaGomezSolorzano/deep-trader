@@ -37,7 +37,7 @@ class Feeder:
 
         returns_idx = dataset.shape[1] - 1
         X_aux, y_aux = [], []
-        for i in range(len(dataset) - 1):
+        for i in range(len(dataset)):
             X_aux.append(dataset[i, config['features_idx']])
             y_aux.append(dataset[i, returns_idx])
 
