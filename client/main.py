@@ -11,7 +11,7 @@ os.environ['TZ'] = 'utc'
 import yaml
 from commons.price_feed import Feeder
 from commons.logUtils import get_logger
-from model.trainer import Model
+from model.online_execution import Model
 from commons.interactive_plots import price_rewards_actions_utility_plot, convergence_plot
 from commons.write_results import write, read_price_actions_rewards, read_convergence
 

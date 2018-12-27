@@ -1,7 +1,7 @@
 import os
 import numpy as np
 import yaml
-from model.rlFunctions import sharpe
+from model.reinforcemen_learning_functions import sharpe
 
 path = os.path.abspath(os.path.dirname(__file__))
 filename = os.path.join(path, "../config/config.yaml")
