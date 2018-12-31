@@ -1,21 +1,8 @@
-# -*- coding: utf-8 -*-
-"""
-Created on 01/08/2018
-
-@author: Borja
-"""
-
-import os
 from plotly import tools
 import plotly.offline as py
 import plotly.graph_objs as go
 import datetime
-import yaml
-
-
-dirname = os.path.abspath(os.path.dirname(__file__))
-filename = os.path.join(dirname, "../config/config.yaml")
-config = yaml.load(open(filename, 'r'))
+from commons.constants import config
 
 
 def commission_analysis(data_02, data_05, data_1):

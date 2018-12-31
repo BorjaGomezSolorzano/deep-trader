@@ -1,11 +1,9 @@
 import os
 import numpy as np
-import yaml
+from commons.constants import config
 from model.reinforcemen_learning_functions import sharpe
 
 path = os.path.abspath(os.path.dirname(__file__))
-filename = os.path.join(path, "../config/config.yaml")
-config = yaml.load(open(filename, 'r'))
 
 filename_price_actions_rewards = os.path.join(path, "../results/" + config['instrument'] + '_' + str(config['c']) + '_' + str(config['n_layers']) + '.csv')
 filename_epochs = os.path.join(path,"../results/convergence_" + config['instrument'] + '_' + str(config['c']) + '_' + str(config['n_layers']) + '.csv')

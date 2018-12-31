@@ -1,19 +1,10 @@
-# -*- coding: utf-8 -*-
-"""
-Created on 24/09/2018
-
-@author: Borja
-"""
+import sys
+sys.path.append('../')
 
 import os
 os.environ['TZ'] = 'utc'
 
-import yaml
-from commons.price_feed import Feeder
-from commons.logUtils import get_logger
-from model.online_execution import Model
-from commons.interactive_plots import price_rewards_actions_utility_plot, convergence_plot
-from commons.write_results import write, read_price_actions_rewards, read_convergence
+from model import *
 
 logger = get_logger(os.path.basename(__file__))
 
@@ -30,12 +21,9 @@ def read_csv():
 
 def write_csv():
 
-  feeder = Feeder()
+  X, y, dates, instrument = process()
 
-  X, y, dates, instrument = feeder.process()
-
-  model = Model()
-  rewards, actions, dates_o, instrument_o, rew_epoch = model.execute(X, y, dates, instrument)
+  rewards, actions, dates_o, instrument_o, rew_epoch = execute(X, y, dates, instrument)
 
   write(dates_o, instrument_o, rewards, actions, rew_epoch)
 

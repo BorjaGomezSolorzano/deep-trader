@@ -1,22 +1,4 @@
-# -*- coding: utf-8 -*-
-"""
-Created on 11/09/2018
-
-@author: Borja
-"""
-
-import os
-
-import tensorflow as tf
-import yaml
-from sklearn.preprocessing import MinMaxScaler
-from model.reinforcemen_learning_functions import reward_np
-import numpy as np
-
-dirname = os.path.abspath(os.path.dirname(__file__))
-filename = os.path.join(dirname, "../config/config.yaml")
-config = yaml.load(open(filename, 'r'))
-
+from model import *
 
 def execute(self, X, y, dates, instrument):
 
@@ -24,37 +6,42 @@ def execute(self, X, y, dates, instrument):
 
     Ws, bs = weights_and_biases()
 
-    input_ph, output_ph, action_train_ph = place_holders()
+    input_phs, output_phs, action_ph = place_holders()
 
-    past_action_train, u, optimizer = recurrent_model(Ws, bs, input_ph, output_ph, action_train_ph)
+    a_t, u, opt = recurrent_model(Ws, bs, input_phs, output_phs, action_ph)
 
     #The normalization
     self.scaler = MinMaxScaler(feature_range=(-1, 1))
 
-    X_transformed = self.scaler.fit_transform(np.copy(X[0:(config['n_layers'][0] + config['window_size'] + config['n_actions'])]))
+    s=(n_layers[0] + window_size + n_actions)
+    X_transformed = self.scaler.fit_transform(np.copy(X[0:s]))
 
     accum_rewards = 0
     past_a = np.zeros((1,1))
-    actions_returned, simple_rewards, dates_o, instrument_o, rew_epochs = [], [], [], [], [0 for k in range(config['epochs'])]
+    actions_returned = []
+    simple_rewards = []
+    dates_o = []
+    instrument_o = []
+    rew_epochs = [0 for k in range(epochs)]
 
     init = tf.initialize_all_variables()
     with tf.Session() as sess:
 
-        for j in range(config['n_layers'][0], config['n_layers'][0] + config['n_actions']):
+        for j in range(n_layers[0], n_layers[0] + n_actions):
 
             sess.run(init)
 
             #Train
-            for ep in range(config['epochs']):
-                feed_dict = {action_train_ph: np.zeros((1,1))}
-                for index in range(config['window_size']):
+            for ep in range(epochs):
+                feed_dict = {action_ph: np.zeros((1,1))}
+                for index in range(window_size):
                     i = index + j
                     x = self.flat(X_transformed, i)
-                    feed_dict[input_ph[index]] = x
-                    feed_dict[output_ph[index]] = y[i]
+                    feed_dict[input_phs[index]] = x
+                    feed_dict[output_phs[index]] = y[i]
 
-                acum_reward, _, a, rr = sess.run([u, optimizer, action_train, rewards_train], feed_dict=feed_dict)
-                rew_epochs[ep] += acum_reward
+                u_value, a, _ = sess.run([u, a_t, opt], feed_dict=feed_dict)
+                rew_epochs[ep] += u_value
 
             i+=1
 
@@ -71,9 +58,12 @@ def execute(self, X, y, dates, instrument):
 
             simple_rewards.append(rew)
 
-            print(str(i), ' action predicted: ', str(a[0][0]), ', reward: ', str(rew), ', accumulated reward: ', str(accum_rewards))
+            print('iteration', str(i),
+                  ', action predicted: ', str(a[0][0]),
+                  ', reward: ', str(rew),
+                  ', accumulated reward: ', str(accum_rewards))
 
-    for k in range(config['epochs']):
-        rew_epochs[k] /= config['epochs']
+    for k in range(epochs):
+        rew_epochs[k] /= epochs
 
     return simple_rewards, actions_returned, dates_o, instrument_o, rew_epochs

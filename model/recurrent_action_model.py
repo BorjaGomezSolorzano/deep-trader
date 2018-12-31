@@ -1,36 +1,27 @@
-import os
-
-from commons import constants
-import tensorflow as tf
-import yaml
-
-dirname = os.path.abspath(os.path.dirname(__file__))
-filename = os.path.join(dirname, "../config/config.yaml")
-config = yaml.load(open(filename, 'r'))
+from model import *
 
 def place_holders():
-    # The placeholders for the input and the output
-    input_ph = []
-    output_ph = []
-    for i in range(config['window_size']):
-        input_ph.append(tf.placeholder(constants.float_type_tf, shape=[1, config['n_layers'][0] * self.n_features]))
-        output_ph.append(tf.placeholder(constants.float_type_tf, shape=()))
+    input_phs = []
+    output_phs = []
+    for i in range(window_size):
+        dim = n_layers[0] * n_features
+        input_phs.append(tf.placeholder(float_type_tf, shape=[1, dim]))
+        output_phs.append(tf.placeholder(float_type_tf, shape=()))
 
-    action_train_ph = tf.placeholder(constants.float_type_tf, shape=(1, 1))
+    action_ph = tf.placeholder(constants.float_type_tf, shape=(1, 1))
 
-    return input_ph, output_ph, action_train_ph
+    return input_phs, output_phs, action_ph
 
-def recurrent_model(Ws, bs, input_ph, output_ph, action_train_ph):
-
-    # The recurrent action model
+def recurrent_model(Ws, bs, input_ph, output_phs, action_ph):
     rewards_train = []
-    past_action_train = action_train_ph
-    for i in range(config['window_size']):
-        action_train = action(input_ph[i], past_action_train, Ws, bs)
-        rewards_train.append(reward_tf(output_ph[i], action_train[0][0], past_action_train[0][0]))
-        past_action_train = action_train
+    a_t1 = action_ph
+    for t in range(window_size):
+        a_t = action(input_ph[t], a_t1, Ws, bs)
+        r_t = reward_tf(output_phs[t], a_t[0][0], a_t1[0][0])
+        rewards_train.append(r_t)
+        a_t1 = a_t
 
     u = utility(rewards_train)
-    optimizer = tf.train.AdamOptimizer(learning_rate=config['learning_rate']).minimize(-u)
+    optimizer = tf.train.AdamOptimizer(learning_rate=learning_rate).minimize(-u)
 
-    return past_action_train, u, optimizer
+    return a_t, u, optimizer
