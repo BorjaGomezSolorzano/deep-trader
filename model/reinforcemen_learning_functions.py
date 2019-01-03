@@ -1,10 +1,10 @@
 from model import *
 
-def reward_tf(u, action_t, action_t1):
-    return u * action_t - c * tf.abs(action_t - action_t1)
+def reward_tf(u, action_t, action_t1, price_t):
+    return (u * action_t1 - c * price_t * tf.abs(action_t - action_t1))*multiplier
 
-def reward_np(u, action_t, action_t1):
-    return u * action_t - c * np.abs(action_t - action_t1)
+def reward_np(u, action_t, action_t1, price_t):
+    return (u * action_t1 - c * price_t * np.abs(action_t - action_t1))*multiplier
 
 def sharpe(returns):
     mu = 0

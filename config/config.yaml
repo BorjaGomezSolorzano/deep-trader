@@ -1,13 +1,14 @@
 #Time,Open,Max,Min,Close,Volume
-instrument: 'XAUUSD'
+instrument: 'EURUSD'
 #features_idx: [1,2,3]
 features_idx: [1]
 instrument_idx: 1
 # Model variables
-c: 1
+c: 0.001
 learning_rate: 0.001
 epochs: 100
 n_layers: [30,30] #FIXME Has to be the same number in each layer!! FIRST:input, SCND: hidden_1, ...
 window_size: 21
-n_actions: 500
+n_actions: 50
+multiplier: 100000 #SPX500=10, XAUUSD=10, EURUSD=100000
 last_n_values: 1000

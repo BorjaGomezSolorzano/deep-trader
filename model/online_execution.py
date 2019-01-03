@@ -1,28 +1,25 @@
 from model import *
 
-def execute(self, X, y, dates, instrument):
+def execute(X, y, dates, prices):
 
     tf.set_random_seed(1)
 
     Ws, bs = weights_and_biases()
 
-    input_phs, output_phs, action_ph = place_holders()
+    input_phs, output_phs, action_ph, prices_phs = place_holders()
 
-    a_t, u, opt = recurrent_model(Ws, bs, input_phs, output_phs, action_ph)
+    last_a, u, opt = recurrent_model(Ws, bs, input_phs, output_phs, action_ph,
+                                     prices_phs)
 
-    #The normalization
-    self.scaler = MinMaxScaler(feature_range=(-1, 1))
-
-    s=(n_layers[0] + window_size + n_actions)
-    X_transformed = self.scaler.fit_transform(np.copy(X[0:s]))
+    scaler = MinMaxScaler(feature_range=(-1, 1))
 
     accum_rewards = 0
-    past_a = np.zeros((1,1))
+    a_t1 = np.zeros((1,1))
     actions_returned = []
     simple_rewards = []
     dates_o = []
     instrument_o = []
-    rew_epochs = [0 for k in range(epochs)]
+    rew_epochs = [0 for _ in range(epochs)]
 
     init = tf.initialize_all_variables()
     with tf.Session() as sess:
@@ -31,16 +28,23 @@ def execute(self, X, y, dates, instrument):
 
             sess.run(init)
 
+            x_dic = {}
+            for index in range(window_size):
+                i = index + j
+                x_i = np.copy(X[((i+1)-n_layers[0]):(i+1)])
+                x_dic[index] = scaler.fit_transform(x_i)
+
             #Train
             for ep in range(epochs):
                 feed_dict = {action_ph: np.zeros((1,1))}
                 for index in range(window_size):
                     i = index + j
-                    x = self.flat(X_transformed, i)
+                    x = flat(x_dic[index])
                     feed_dict[input_phs[index]] = x
                     feed_dict[output_phs[index]] = y[i]
+                    feed_dict[prices_phs[index]] = prices[i]
 
-                u_value, a, _ = sess.run([u, a_t, opt], feed_dict=feed_dict)
+                u_value, a_t, _ = sess.run([u, last_a, opt], feed_dict=feed_dict)
                 rew_epochs[ep] += u_value
 
             i+=1
@@ -48,18 +52,18 @@ def execute(self, X, y, dates, instrument):
             # Test
 
             dates_o.append(dates[i])
-            instrument_o.append(instrument[i])
+            instrument_o.append(prices[i])
 
-            actions_returned.append(a[0][0])
+            actions_returned.append(a_t[0][0])
 
-            rew = reward_np(y[i], a[0][0], past_a[0][0])
+            rew = reward_np(y[i], a_t[0][0], a_t1[0][0], prices[i])
             accum_rewards += rew
-            past_a = a
+            a_t1 = a_t
 
             simple_rewards.append(rew)
 
             print('iteration', str(i),
-                  ', action predicted: ', str(a[0][0]),
+                  ', action predicted: ', str(a_t[0][0]),
                   ', reward: ', str(rew),
                   ', accumulated reward: ', str(accum_rewards))
 

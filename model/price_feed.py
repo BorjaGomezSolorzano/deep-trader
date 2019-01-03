@@ -1,7 +1,6 @@
 from model import *
 
-def flat(X_transformed, i):
-    x1 = X_transformed[((i + 1) - n_layers[0]):(i + 1)]
+def flat(x1):
     l1 = n_layers[0]
     l = l1 * n_features
     x = np.zeros((1, l))
