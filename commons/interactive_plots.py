@@ -1,4 +1,3 @@
-import plotly
 from plotly import tools
 import plotly.offline as py
 import plotly.io as pio
@@ -7,21 +6,21 @@ import datetime
 from commons.constants import config
 
 images_path="C:/Users/borja/Desktop/master_thesis/imagenes_thesis"
-#plotly.io.orca.config.executable = 'C:/Users/borja/Anaconda3/orca_app/orca.exe'
+
 
 def commission_analysis(data_02, data_05, data_1):
 
     trace02 = go.Box(
         y=data_02,
-        name = "0.2%"
+        name = "c"
     )
     trace05 = go.Box(
         y=data_05,
-        name = "0.5%"
+        name = "5*c"
     )
     trace1 = go.Box(
         y=data_1,
-        name="1%"
+        name="10*c"
     )
     data = [trace02, trace05, trace1]
 
@@ -31,8 +30,10 @@ def commission_analysis(data_02, data_05, data_1):
 
     fig = go.Figure(data=data, layout=layout)
 
-    pio.write_image(fig, images_path + "/commissions_analysis_" + config['instrument'] + '_' + str(config['c'])+ '_' + str(config['n_layers']) + ".pdf")
-    py.plot(fig, filename='{}.html'.format("../results/commissions_analysis_" + config['instrument'] + '_' + str(config['c'])+ '_' + str(config['n_layers'])))
+    pdf = '{}.pdf'.format("../results/commissions_analysis_" + config['instrument'] + '_' + str(config['c'])+ '_' + str(config['n_layers']) + '_' + str(config['features_idx']))
+    html = '{}.html'.format("../results/commissions_analysis_" + config['instrument'] + '_' + str(config['c'])+ '_' + str(config['n_layers']) + '_' + str(config['features_idx']))
+    py.plot(fig, filename=html)
+    pio.write_image(fig, pdf)
 
 
 def price_rewards_actions_utility_plot(date_string, dates, data, rewards, decisions, sharpe):
@@ -70,8 +71,10 @@ def price_rewards_actions_utility_plot(date_string, dates, data, rewards, decisi
 
     fig['layout'].update(height=800, width=1000, title='deep-trader {}'.format(config['instrument']))
 
-    pio.write_image(fig,images_path + "/" + config['instrument'] + '_' + str(config['c']) + '_' + str(config['n_layers']) + ".pdf")
-    py.plot(fig, filename='{}.html'.format("../results/" + config['instrument'] + '_' + str(config['c'])+ '_' + str(config['n_layers'])))
+    html = '{}.html'.format("../results/" + config['instrument'] + '_' + str(config['c'])+ '_' + str(config['n_layers']) + '_' + str(config['features_idx']))
+    pdf = '{}.pdf'.format("../results/" + config['instrument'] + '_' + str(config['c']) + '_' + str(config['n_layers']) + '_' + str(config['features_idx']))
+    py.plot(fig, filename=html)
+    pio.write_image(fig, pdf)
 
 def convergence_plot(rew_epochs):
 
@@ -91,5 +94,7 @@ def convergence_plot(rew_epochs):
 
     fig = dict(data=data, layout=layout)
 
-    pio.write_image(fig,images_path + "/convergence_" + config['instrument'] + '_' + str(config['c']) + '_' + str(config['n_layers']) + ".pdf")
-    py.plot(fig, filename='{}.html'.format("../results/convergence_" + config['instrument'] + '_' + str(config['c'])+ '_' + str(config['n_layers'])))
+    html = '{}.html'.format("../results/convergence_" + config['instrument'] + '_' + str(config['c'])+ '_' + str(config['n_layers']) + '_' + str(config['features_idx']))
+    pdf = '{}.pdf'.format("../results/convergence_" + config['instrument'] + '_' + str(config['c'])+ '_' + str(config['n_layers']) + '_' + str(config['features_idx']))
+    py.plot(fig, filename=html)
+    pio.write_image(fig, pdf)

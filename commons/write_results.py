@@ -5,8 +5,8 @@ from model.reinforcemen_learning_functions import sharpe
 
 path = os.path.abspath(os.path.dirname(__file__))
 
-filename_price_actions_rewards = os.path.join(path, "../results/" + config['instrument'] + '_' + str(config['c']) + '_' + str(config['n_layers']) + '.csv')
-filename_epochs = os.path.join(path,"../results/convergence_" + config['instrument'] + '_' + str(config['c']) + '_' + str(config['n_layers']) + '.csv')
+filename_price_actions_rewards = os.path.join(path, "../results/" + config['instrument'] + '_' + str(config['c']) + '_' + str(config['n_layers'])+ '_' + str(config['features_idx']) + '.csv')
+filename_epochs = os.path.join(path,"../results/convergence_" + config['instrument'] + '_' + str(config['c']) + '_' + str(config['n_layers'])+ '_' + str(config['features_idx']) + '.csv')
 
 
 def sharpe_c(rewards):
@@ -32,7 +32,7 @@ def read_convergence():
     return decission_changes
 
 def read_simple_rewards_commissions(commission_name):
-    filename_commission_analysis = os.path.join(path,"../results/commission_analysis_" + config['instrument'] + '_' + commission_name + '_' + str(config['n_layers']) + '.csv')
+    filename_commission_analysis = os.path.join(path,"../results/commission_analysis_" + config['instrument'] + '_' + commission_name + '_' + str(config['n_layers'])+ '_' + str(config['features_idx']) + '.csv')
 
     decission_changes = []
     with open(filename_commission_analysis, "r") as file:
@@ -66,7 +66,7 @@ def write(dates_test, data, simple_rewards, decisions, rew_epochs):
         for rew_epoch in rew_epochs:
             file.write(str(rew_epoch) + "\n")
 
-    filename_commission_analysis = os.path.join(path,"../results/commission_analysis_" + config['instrument'] + '_' + str(config['c'])+ '_' + str(config['n_layers']) + '.csv')
+    filename_commission_analysis = os.path.join(path,"../results/commission_analysis_" + config['instrument'] + '_' + str(config['c'])+ '_' + str(config['n_layers'])+ '_' + str(config['features_idx']) + '.csv')
 
     with open(filename_commission_analysis, "w") as file:
         for i in range(1,len(decisions)):

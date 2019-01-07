@@ -27,9 +27,16 @@ def write_csv():
 
   write(dates_o, instrument_o, rewards, actions, rew_epoch)
 
+def plot_commissions():
+  decission_changes_02 = read_simple_rewards_commissions('2.5e-05')
+  decission_changes_05 = read_simple_rewards_commissions('0.000125')
+  decission_changes_1 = read_simple_rewards_commissions('0.00025')
+
+  commission_analysis(decission_changes_02, decission_changes_05, decission_changes_1)
 
 if __name__ == '__main__':
 
   write_csv()
-
   read_csv()
+
+  #plot_commissions()
